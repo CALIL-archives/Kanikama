@@ -6,6 +6,7 @@ engines:
 ratings:
   paths:
   - "**.coffee"
+  - "**.js"
 exclude_paths:
 - test/test.coffee
 - gulpfile.js
