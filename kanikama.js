@@ -385,15 +385,15 @@ Kanikama = (function() {
     d = this.buffer.last(1)[0];
     accuracy = 0.1;
     newPosition = this.nearestD(d, 6);
-    if (newPosition == null) {
+    if (newPosition === null) {
       newPosition = this.nearest2(d, 3);
       if (newPosition == null) {
         accuracy = 3;
         newPosition = this.nearest1(d, 6);
-        if (newPosition == null) {
+        if (newPosition === null) {
           accuracy = 6;
           newPosition = this.nearest2(d, 1);
-          if (newPosition == null) {
+          if (newPosition === null) {
             newPosition = this.nearest1(d, 0);
             accuracy = 10;
           }
@@ -409,9 +409,9 @@ Kanikama = (function() {
   Kanikama.prototype.push = function(beacons) {
     this.buffer.push(beacons);
     this.updateFacility();
-    if (this.currentFacility) {
+    if (this.currentFacility !== null) {
       this.updateFloor();
-      if (this.currentFloor) {
+      if (this.currentFloor !== null) {
         return this.updatePosition();
       }
     }

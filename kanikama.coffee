@@ -352,15 +352,15 @@ class Kanikama
     d = @buffer.last(1)[0]
     accuracy = 0.1
     newPosition = @nearestD(d, 6)
-    if not newPosition?
+    if newPosition is null
       newPosition = @nearest2(d, 3)
       if not newPosition?
         accuracy = 3
         newPosition = @nearest1(d, 6)
-        if not newPosition?
+        if newPosition is null
           accuracy = 6
           newPosition = @nearest2(d, 1)
-          if not newPosition?
+          if newPosition is null
             newPosition = @nearest1(d, 0)
             accuracy = 10
     if newPosition?
@@ -373,9 +373,9 @@ class Kanikama
   push: (beacons)->
     @buffer.push(beacons)
     @updateFacility()
-    if @currentFacility
+    if @currentFacility isnt  null
       @updateFloor()
-      if @currentFloor
+      if @currentFloor isnt null
         @updatePosition()
 
 
