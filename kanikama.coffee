@@ -197,7 +197,7 @@ class Kanikama
     return nearestFloor
 
 
-  # バッファを処理してフロアを選択する【フロア】
+  # バッファを処理してフロアを選択する
   #
   # @private
   # フロアが1つしかない場合は即時フロアを確定する
