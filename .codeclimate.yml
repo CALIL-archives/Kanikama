@@ -1,8 +1,12 @@
-languages:
-  Ruby: false
-  JavaScript: true
-  PHP: false
+engines:
+  coffeelint:
+    enabled: true
+  eslint:
+    enabled: true
+ratings:
+  paths:
+  - "**.coffee"
 exclude_paths:
-- "example/*"
-- "kanikama.js2/doc/javascript/application.js"
-- "src/vendor/geolib.js"
+- kanikama.js
+- test/test.coffee
+- gulpfile.js

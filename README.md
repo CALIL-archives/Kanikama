@@ -1,8 +1,8 @@
 # Kanikama
 
-[![Build Status](https://travis-ci.org/CALIL/kanikama.js.svg?branch=master)](https://travis-ci.org/CALIL/kanikama.js)
-[![Code Climate](https://codeclimate.com/github/CALIL/kanikama.js/badges/gpa.svg)](https://codeclimate.com/github/CALIL/kanikama.js)
-[![Test Coverage](https://codeclimate.com/github/CALIL/kanikama.js/badges/coverage.svg)](https://codeclimate.com/github/CALIL/kanikama.js)
+[![Circle CI](https://circleci.com/gh/CALIL/Kanikama.svg?style=svg)](https://circleci.com/gh/CALIL/Kanikama)
+[![Code Climate](https://codeclimate.com/github/CALIL/Kanikama/badges/gpa.svg)](https://codeclimate.com/github/CALIL/Kanikama)
+[![Test Coverage](https://codeclimate.com/github/CALIL/Kanikama/badges/coverage.svg)](https://codeclimate.com/github/CALIL/Kanikama/coverage)
 
 iBeacon based micro location library 
 
