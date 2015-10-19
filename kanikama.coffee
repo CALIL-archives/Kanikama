@@ -1,3 +1,10 @@
+# Kanikama
+#
+# Copyright (c) 2015 CALIL Inc.
+#
+# This software is released under the MIT License.
+# http://opensource.org/licenses/mit-license.php
+
 if typeof require isnt "undefined"
   geolib = require('geolib')
 
