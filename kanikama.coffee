@@ -385,5 +385,6 @@ class Kanikama
 
 if typeof exports isnt 'undefined'
   module.exports =
+    equalBeacon: equalBeacon
     Kanikama: Kanikama
     Buffer: Buffer

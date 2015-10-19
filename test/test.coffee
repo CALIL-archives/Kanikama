@@ -4,6 +4,37 @@ assert = require('assert')
 should = require('should')
 Buffer = require('../kanikama').Buffer
 Kanikama = require('../kanikama').Kanikama
+equalBeacon = require('../kanikama').equalBeacon
+
+describe 'Utilities', ->
+  describe 'equalBeacon', ->
+    it 'should return true when same beacon', (done)->
+      a={
+        uuid:'A'
+        major:1
+        minor:1
+      }
+      b={
+        uuid:'A'
+        major:1
+        minor:1
+      }
+      equalBeacon(a,b).should.equal(true)
+      done()
+
+    it 'should return false when different beacon', (done)->
+      a={
+        uuid:'A'
+        major:1
+        minor:1
+      }
+      b={
+        uuid:'A'
+        major:1
+        minor:2
+      }
+      equalBeacon(a,b).should.equal(false)
+      done()
 
 describe 'Buffer', ->
   describe 'Initialize', ->

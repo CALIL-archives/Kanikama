@@ -429,6 +429,7 @@ Kanikama = (function() {
 
 if (typeof exports !== 'undefined') {
   module.exports = {
+    equalBeacon: equalBeacon,
     Kanikama: Kanikama,
     Buffer: Buffer
   };
