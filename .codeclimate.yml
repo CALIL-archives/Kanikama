@@ -10,3 +10,8 @@ exclude_paths:
 - kanikama.js
 - test/test.coffee
 - gulpfile.js
+- README.md
+- circle.yml
+- package.json
+- test/mocha.opts
+- test/sabae.json
