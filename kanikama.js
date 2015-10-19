@@ -67,6 +67,7 @@ Buffer = (function() {
 Kanikama = (function() {
   function Kanikama() {
     this.buffer = new Buffer(10);
+    this.uid = 1000000000;
   }
 
   Kanikama.prototype.facilities_ = null;
@@ -78,8 +79,6 @@ Kanikama = (function() {
   Kanikama.prototype.currentPosition = null;
 
   Kanikama.prototype.heading = null;
-
-  Kanikama.prototype.uid = 1000000000;
 
   Kanikama.prototype.buffer = null;
 
@@ -147,9 +146,6 @@ Kanikama = (function() {
 
   Kanikama.prototype.getNearestFloor = function(windowSize) {
     var b, beacons, distance, effectiveRange, fb, floor, foundFloor, i, j, k, l, len, len1, len2, len3, len4, len5, len6, m, n, near, nearestFloor, o, ref, ref1, ref2, ref3, ref4, ref5, rssiCount, rssiSum;
-    if (this.currentFacility == null) {
-      throw 'current facility is not set.';
-    }
     foundFloor = 0;
     ref = this.currentFacility.floors;
     for (i = 0, len = ref.length; i < len; i++) {

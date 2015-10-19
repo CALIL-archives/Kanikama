@@ -62,10 +62,10 @@ class Buffer
   size: ->
     @buffer.length
 
-
 class Kanikama
   constructor: ->
     @buffer = new Buffer(10)
+    @uid = 1000000000
 
   facilities_: null
   # 現在選択されている施設
@@ -74,10 +74,8 @@ class Kanikama
   currentFloor: null
   # 現在地
   currentPosition: null
-  # デバイスの向いている方向(度/null)
+  # @property デバイスの向いている方向(度/null) {Number}
   heading: null
-  # 内部用UID
-  uid: 1000000000
   # 計測データのバッファ
   buffer: null
 
@@ -129,7 +127,6 @@ class Kanikama
         @currentFloor = null
         @currentPosition = null
 
-
   # もっとも近いフロアを返す
   #
   # ・各フロアで一番RSSIが近いビーコンの周囲3メートルのRSSI平均を比較する
@@ -140,9 +137,6 @@ class Kanikama
   # @return {Object} フロア
   #
   getNearestFloor: (windowSize)->
-    if not @currentFacility?
-      throw('current facility is not set.')
-
     # ビーコンをフロア毎に仕分ける
     # RSSIが0のビーコンは無視する
     foundFloor = 0
@@ -192,7 +186,6 @@ class Kanikama
         if nearestFloor is null or floor._runtime.averageRssi > nearestFloor._runtime.averageRssi
           nearestFloor = floor
     return nearestFloor
-
 
   # バッファを処理してフロアを選択する
   #
@@ -367,7 +360,6 @@ class Kanikama
       newPosition.accuracy = accuracy
       @currentPosition = newPosition
 
-
   # 新しい計測データを追加して状態をアップデートする
   #
   push: (beacons)->
@@ -377,7 +369,6 @@ class Kanikama
       @updateFloor()
       if @currentFloor isnt null
         @updatePosition()
-
 
 if typeof exports isnt 'undefined'
   module.exports =
