@@ -285,7 +285,10 @@ Kanikama = (function() {
   };
 
   Kanikama.prototype.nearestD = function(beacons, filter_near) {
-    var i, len, p, ref, ref1;
+    var end, i, len, p, ref, ref1, ref2, ref3, start;
+    if (this.heading == null) {
+      return null;
+    }
     if (beacons.length === 0) {
       return null;
     }
@@ -305,9 +308,23 @@ Kanikama = (function() {
     for (i = 0, len = ref.length; i < len; i++) {
       p = ref[i];
       if (equalBeacon(p.beacon, beacons[0])) {
-        if (((90 - p.wide / 2) < (ref1 = (this.heading + p.direction) % 360) && ref1 < (90 + p.range / 2))) {
+        start = p.direction - p.range / 2;
+        end = p.direction + p.range / 2;
+        if ((start <= (ref1 = this.heading) && ref1 <= end)) {
           p.algorithm = 'nearestD';
           return p;
+        }
+        if (start < 0) {
+          if ((start + 360 <= (ref2 = this.heading) && ref2 <= 360)) {
+            p.algorithm = 'nearestD';
+            return p;
+          }
+        }
+        if (end >= 360) {
+          if ((0 <= (ref3 = this.heading) && ref3 <= end - 360)) {
+            p.algorithm = 'nearestD';
+            return p;
+          }
         }
       }
     }
@@ -383,8 +400,8 @@ Kanikama = (function() {
     }
     if (newPosition != null) {
       newPosition.accuracy = accuracy;
+      return this.currentPosition = newPosition;
     }
-    return this.currentPosition = newPosition;
   };
 
   Kanikama.prototype.push = function(beacons) {

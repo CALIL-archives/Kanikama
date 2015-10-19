@@ -336,15 +336,39 @@ describe 'Position', ->
 #    console.log kanikama.currentPosition
     done()
 
-  it 'nearestD', (done)->
-    throw 'please write test!'
+  it 'nearestD top (direction = 0, range = 90)', (done)->
+    for heading in [315..359]
+      kanikama.heading = heading
+      kanikama.push([SB(39, -20)])
+      kanikama.currentPosition.latitude.should.equal(136.18627059384187)
+      kanikama.currentPosition.algorithm.should.equal('nearestD')
+    for heading in [0..45]
+      kanikama.heading = heading
+      kanikama.push([SB(39, -20)])
+      kanikama.currentPosition.latitude.should.equal(136.18627059384187)
+      kanikama.currentPosition.algorithm.should.equal('nearestD')
+#    console.log kanikama.currentPosition.direction
+    done()
+
+  it 'nearestD bottom (direction = 180, range = 90)', (done)->
+    for heading in [135..225]
+      kanikama.heading = heading
+      kanikama.push([SB(39, -20)])
+      kanikama.currentPosition.latitude.should.equal(136.18626991863806)
+      kanikama.currentPosition.algorithm.should.equal('nearestD')
+#    console.log kanikama.currentPosition.direction
     done()
 
   it 'nearest2', (done)->
     kanikama.push([SB(133, -20), SB(116, -20)])
     kanikama.currentPosition.latitude.should.equal(136.1863696569712)
     kanikama.currentPosition.algorithm.should.equal('nearest2')
-    console.log kanikama.currentPosition
+#    console.log kanikama.currentPosition
     done()
 
-
+  it 'if no beacon continue previous position', (done)->
+    kanikama.push([SB(39, -20)])
+    tmp = kanikama.currentPosition
+    kanikama.push([])
+    tmp.latitude.should.equal(kanikama.currentPosition.latitude)
+    done()

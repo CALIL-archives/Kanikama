@@ -363,7 +363,7 @@ class Kanikama
             accuracy = 10
     if newPosition?
       newPosition.accuracy = accuracy
-    @currentPosition = newPosition
+      @currentPosition = newPosition
 
 
   # 新しい計測データを追加して状態をアップデートする

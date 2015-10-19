@@ -3676,7 +3676,7 @@
               "major": 105,
               "minor": 40
             },
-            "direction": 270,
+            "direction": 180,
             "range": 90
           },
           {
@@ -3687,7 +3687,7 @@
               "major": 105,
               "minor": 39
             },
-            "direction": 270,
+            "direction": 180,
             "range": 90
           },
           {
@@ -3698,7 +3698,7 @@
               "major": 105,
               "minor": 38
             },
-            "direction": 270,
+            "direction": 180,
             "range": 90
           },
           {
@@ -3709,7 +3709,7 @@
               "major": 105,
               "minor": 37
             },
-            "direction": 270,
+            "direction": 180,
             "range": 90
           },
           {
@@ -3720,7 +3720,7 @@
               "major": 105,
               "minor": 36
             },
-            "direction": 270,
+            "direction": 180,
             "range": 90
           },
           {
@@ -3731,7 +3731,7 @@
               "major": 105,
               "minor": 35
             },
-            "direction": 270,
+            "direction": 180,
             "range": 90
           },
           {
@@ -3742,7 +3742,7 @@
               "major": 105,
               "minor": 34
             },
-            "direction": 270,
+            "direction": 180,
             "range": 90
           },
           {
@@ -3753,7 +3753,7 @@
               "major": 105,
               "minor": 46
             },
-            "direction": 270,
+            "direction": 180,
             "range": 90
           },
           {
@@ -3764,7 +3764,7 @@
               "major": 105,
               "minor": 45
             },
-            "direction": 270,
+            "direction": 180,
             "range": 90
           },
           {
@@ -3775,7 +3775,7 @@
               "major": 105,
               "minor": 44
             },
-            "direction": 270,
+            "direction": 180,
             "range": 90
           },
           {
@@ -3786,7 +3786,7 @@
               "major": 105,
               "minor": 43
             },
-            "direction": 270,
+            "direction": 180,
             "range": 90
           },
           {
@@ -3797,7 +3797,7 @@
               "major": 105,
               "minor": 39
             },
-            "direction": 90,
+            "direction": 0,
             "range": 90
           },
           {
@@ -3808,7 +3808,7 @@
               "major": 105,
               "minor": 38
             },
-            "direction": 90,
+            "direction": 0,
             "range": 90
           },
           {
@@ -3819,7 +3819,7 @@
               "major": 105,
               "minor": 37
             },
-            "direction": 90,
+            "direction": 0,
             "range": 90
           },
           {
@@ -3830,7 +3830,7 @@
               "major": 105,
               "minor": 36
             },
-            "direction": 90,
+            "direction": 0,
             "range": 90
           },
           {
@@ -3841,7 +3841,7 @@
               "major": 105,
               "minor": 35
             },
-            "direction": 90,
+            "direction": 0,
             "range": 90
           },
           {
@@ -3852,7 +3852,7 @@
               "major": 105,
               "minor": 34
             },
-            "direction": 90,
+            "direction": 0,
             "range": 90
           },
           {
@@ -3863,7 +3863,7 @@
               "major": 105,
               "minor": 46
             },
-            "direction": 90,
+            "direction": 0,
             "range": 90
           },
           {
@@ -3874,7 +3874,7 @@
               "major": 105,
               "minor": 45
             },
-            "direction": 90,
+            "direction": 0,
             "range": 90
           },
           {
@@ -3885,7 +3885,7 @@
               "major": 105,
               "minor": 44
             },
-            "direction": 90,
+            "direction": 0,
             "range": 90
           },
           {
@@ -3896,7 +3896,7 @@
               "major": 105,
               "minor": 43
             },
-            "direction": 90,
+            "direction": 0,
             "range": 90
           }
         ]
