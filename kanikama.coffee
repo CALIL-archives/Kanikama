@@ -270,7 +270,7 @@ class Kanikama
       return null
     beacons = beacons.filter((_b)-> _b.rssi isnt 0)
     beacons.sort((_a, _b)-> _b.rssi - _a.rssi)
-    if filter_near > 0 and beacons.length > 1 and beacons[0]['rssi'] - beacons[1]['rssi'] < filter_near
+    if filter_near > 0 and beacons.length > 1 and beacons[0].rssi - beacons[1].rssi < filter_near
       return null
     for p in @currentFloor.nearestD
       if equalBeacon(p.beacon, beacons[0])
