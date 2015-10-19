@@ -1,0 +1,8 @@
+languages:
+  Ruby: false
+  JavaScript: true
+  PHP: false
+exclude_paths:
+- "example/*"
+- "kanikama.js2/doc/javascript/application.js"
+- "src/vendor/geolib.js"

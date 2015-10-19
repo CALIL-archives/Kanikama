@@ -1,0 +1,12 @@
+machine:
+  node:
+    version:
+      0.12.7
+dependencies:
+  post:
+    - npm update
+    - npm install -g codo
+    - npm install -g mocha
+test:
+  override:
+    - ./node_modules/.bin/gulp test
