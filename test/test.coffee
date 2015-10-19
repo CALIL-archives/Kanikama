@@ -359,11 +359,22 @@ describe 'Position', ->
 #    console.log kanikama.currentPosition.direction
     done()
 
-  it 'nearest2', (done)->
+  it 'nearest2 x1', (done)->
     kanikama.push([SB(133, -20), SB(116, -20)])
     kanikama.currentPosition.latitude.should.equal(136.1863696569712)
     kanikama.currentPosition.algorithm.should.equal('nearest2')
 #    console.log kanikama.currentPosition
+    done()
+
+  it 'nearest2 x2', (done)->
+    kanikama.push([SB(133, -20), SB(116, -20), SB(101, -30), SB(117, -30)])
+    kanikama.currentPosition.latitude.should.equal(136.1863696569712)
+    kanikama.currentPosition.algorithm.should.equal('nearest2')
+    done()
+
+  it 'nearest2 x2 filter near', (done)->
+    kanikama.push([SB(133, -20), SB(116, -20), SB(101, -22), SB(117, -22)])
+    kanikama.currentPosition.accuracy.should.equal(6)
     done()
 
   it 'if no beacon continue previous position', (done)->
