@@ -296,7 +296,7 @@ Kanikama = (function() {
     beacons.sort(function(_a, _b) {
       return _b.rssi - _a.rssi;
     });
-    if (filter_near > 0 && beacons.length > 1 && beacons[0]['rssi'] - beacons[1]['rssi'] < filter_near) {
+    if (filter_near > 0 && beacons.length > 1 && beacons[0].rssi - beacons[1].rssi < filter_near) {
       return null;
     }
     ref = this.currentFloor.nearestD;
