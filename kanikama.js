@@ -1,3 +1,12 @@
+
+/*
+
+Kanikama
+
+Copyright (c) 2015 CALIL Inc.
+This software is released under the MIT License.
+http://opensource.org/licenses/mit-license.php
+ */
 var Buffer, Kanikama, equalBeacon, geolib;
 
 if (typeof require !== "undefined") {
