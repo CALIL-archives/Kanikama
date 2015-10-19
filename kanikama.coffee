@@ -315,12 +315,15 @@ class Kanikama
     beacons = beacons.filter((_item)-> _item.rssi isnt 0)
     beacons.sort((x, y)-> y.rssi - x.rssi)
 
+    af = (_item)-> equalBeacon(_item, p.beacons[0])
+    bf = (_item)-> equalBeacon(_item, p.beacons[1])
+
     candidate = []
     for p in  @currentFloor.nearest2
-      beacon_a = beacons.filter((_item)-> equalBeacon(_item, p.beacons[0]))
-      beacon_b = beacons.filter((_item)-> equalBeacon(_item, p.beacons[1]))
-      if beacon_a.length > 0 and beacon_b.length > 0
-        p.rssi = (beacon_a[0].rssi + beacon_b[0].rssi) / 2
+      a = beacons.filter(af)
+      b = beacons.filter(bf)
+      if a.length > 0 and b.length > 0
+        p.rssi = (a[0].rssi + b[0].rssi) / 2
         candidate.push(p)
 
     if candidate.length is 0

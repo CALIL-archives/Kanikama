@@ -330,7 +330,7 @@ Kanikama = (function() {
   };
 
   Kanikama.prototype.nearest2 = function(beacons, filter_near) {
-    var beacon_a, beacon_b, candidate, i, len, p, ref;
+    var a, af, b, bf, candidate, i, len, p, ref;
     if (beacons.length < 2) {
       return null;
     }
@@ -343,18 +343,20 @@ Kanikama = (function() {
     beacons.sort(function(x, y) {
       return y.rssi - x.rssi;
     });
+    af = function(_item) {
+      return equalBeacon(_item, p.beacons[0]);
+    };
+    bf = function(_item) {
+      return equalBeacon(_item, p.beacons[1]);
+    };
     candidate = [];
     ref = this.currentFloor.nearest2;
     for (i = 0, len = ref.length; i < len; i++) {
       p = ref[i];
-      beacon_a = beacons.filter(function(_item) {
-        return equalBeacon(_item, p.beacons[0]);
-      });
-      beacon_b = beacons.filter(function(_item) {
-        return equalBeacon(_item, p.beacons[1]);
-      });
-      if (beacon_a.length > 0 && beacon_b.length > 0) {
-        p.rssi = (beacon_a[0].rssi + beacon_b[0].rssi) / 2;
+      a = beacons.filter(af);
+      b = beacons.filter(bf);
+      if (a.length > 0 && b.length > 0) {
+        p.rssi = (a[0].rssi + b[0].rssi) / 2;
         candidate.push(p);
       }
     }
