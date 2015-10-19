@@ -2,7 +2,8 @@
 
 [![Circle CI](https://circleci.com/gh/CALIL/Kanikama.svg?style=svg)](https://circleci.com/gh/CALIL/Kanikama)
 [![Code Climate](https://codeclimate.com/github/CALIL/Kanikama/badges/gpa.svg)](https://codeclimate.com/github/CALIL/Kanikama)
-[![Test Coverage](https://codeclimate.com/github/CALIL/Kanikama/badges/coverage.svg)](https://codeclimate.com/github/CALIL/Kanikama/coverage)
+[![bitHound Score](https://www.bithound.io/github/CALIL/Kanikama/badges/score.svg)](https://www.bithound.io/github/CALIL/Kanikama)
+[![bitHound Dependencies](https://www.bithound.io/github/CALIL/Kanikama/badges/dependencies.svg)](https://www.bithound.io/github/CALIL/Kanikama/master/dependencies/npm)
 
 iBeacon based micro location library 
 
