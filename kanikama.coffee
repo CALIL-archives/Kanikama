@@ -11,10 +11,7 @@ if typeof require isnt "undefined"
 # ビーコンオブジェクトが同じかどうか評価する
 #
 equalBeacon = (a, b)->
-  if a.uuid is b.uuid and a.major is b.major and a.minor is b.minor
-    return true
-  else
-    return false
+  a.uuid is b.uuid and a.major is b.major and a.minor is b.minor
 
 # Some utility for beacons buffer
 #

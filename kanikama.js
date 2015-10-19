@@ -5,11 +5,7 @@ if (typeof require !== "undefined") {
 }
 
 equalBeacon = function(a, b) {
-  if (a.uuid === b.uuid && a.major === b.major && a.minor === b.minor) {
-    return true;
-  } else {
-    return false;
-  }
+  return a.uuid === b.uuid && a.major === b.major && a.minor === b.minor;
 };
 
 Buffer = (function() {
@@ -312,17 +308,20 @@ Kanikama = (function() {
         end = p.direction + p.range / 2;
         if ((start <= (ref1 = this.heading) && ref1 <= end)) {
           p.algorithm = 'nearestD';
+          p.rssi = beacons[0].rssi;
           return p;
         }
         if (start < 0) {
           if ((start + 360 <= (ref2 = this.heading) && ref2 <= 360)) {
             p.algorithm = 'nearestD';
+            p.rssi = beacons[0].rssi;
             return p;
           }
         }
         if (end >= 360) {
           if ((0 <= (ref3 = this.heading) && ref3 <= end - 360)) {
             p.algorithm = 'nearestD';
+            p.rssi = beacons[0].rssi;
             return p;
           }
         }
