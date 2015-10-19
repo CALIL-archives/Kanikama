@@ -350,7 +350,7 @@ class Kanikama
     newPosition = @nearestD(d, 6)
     if newPosition is null
       newPosition = @nearest2(d, 3)
-      if not newPosition?
+      if newPosition is null
         accuracy = 3
         newPosition = @nearest1(d, 6)
         if newPosition is null
