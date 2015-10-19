@@ -23,8 +23,6 @@ equalBeacon = (a, b)->
 class Buffer
   validate_ = (beacons)->
     for b in beacons
-      if !b.major? or !b.minor? or !b.uuid? or !b.rssi?
-        return false
       if typeof b.major isnt 'number' or typeof b.minor isnt 'number' or typeof b.rssi isnt 'number' or typeof b.uuid isnt 'string'
         return false
     return true

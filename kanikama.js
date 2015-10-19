@@ -24,9 +24,6 @@ Buffer = (function() {
     var b, i, len;
     for (i = 0, len = beacons.length; i < len; i++) {
       b = beacons[i];
-      if ((b.major == null) || (b.minor == null) || (b.uuid == null) || (b.rssi == null)) {
-        return false;
-      }
       if (typeof b.major !== 'number' || typeof b.minor !== 'number' || typeof b.rssi !== 'number' || typeof b.uuid !== 'string') {
         return false;
       }
