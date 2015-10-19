@@ -3,6 +3,9 @@ engines:
     enabled: true
   eslint:
     enabled: true
+  fixme:
+    enabled: true
+
 ratings:
   paths:
   - "**.coffee"
