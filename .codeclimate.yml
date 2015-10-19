@@ -7,7 +7,6 @@ ratings:
   paths:
   - "**.coffee"
 exclude_paths:
-- kanikama.js
 - test/test.coffee
 - gulpfile.js
 - README.md

@@ -48,11 +48,10 @@ class Buffer
     return @buffer.push(beacons)
 
   # Return slice of buffer
+  # size is should set over 0
   #
   last: (size)->
-    if size > 0
-      return @buffer.slice(-1 * size)
-    return []
+    return @buffer.slice(-1 * size)
 
   # Clear buffer
   #
@@ -200,8 +199,6 @@ class Kanikama
   # バッファを処理してフロアを選択する
   #
   # @private
-  # フロアが1つしかない場合は即時フロアを確定する
-  # 過去3回分の計測データが連続して新しいフロアの場合は切り替える
   #
   updateFloor: ->
     # フロアのランタイム変数を初期化
@@ -216,6 +213,7 @@ class Kanikama
       newFloor = @getNearestFloor(3)
       if newFloor?
         newFloor._runtime.lastAppear = new Date()
+        # フロアが1つしかない場合は即時フロアを確定する
         if not @currentFloor
           @currentFloor = newFloor
           @currentPosition = null

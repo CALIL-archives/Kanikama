@@ -51,10 +51,7 @@ Buffer = (function() {
   };
 
   Buffer.prototype.last = function(size) {
-    if (size > 0) {
-      return this.buffer.slice(-1 * size);
-    }
-    return [];
+    return this.buffer.slice(-1 * size);
   };
 
   Buffer.prototype.clear = function() {
