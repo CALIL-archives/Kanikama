@@ -82,6 +82,8 @@ Kanikama = (function() {
 
   Kanikama.prototype.buffer = null;
 
+  Kanikama.prototype.callbacks = {};
+
   Kanikama.prototype.existCurrentFacilityBeacon = function(windowSize) {
     var b, beacons, fb, i, j, k, len, len1, len2, ref, ref1;
     if (this.currentFacility != null) {
@@ -139,7 +141,8 @@ Kanikama = (function() {
       if (newFacility) {
         this.currentFacility = newFacility;
         this.currentFloor = null;
-        return this.currentPosition = null;
+        this.currentPosition = null;
+        return this.dispatch('change:facility', this.currentFacility);
       }
     }
   };
@@ -240,11 +243,13 @@ Kanikama = (function() {
         newFloor._runtime.lastAppear = new Date();
         if (!this.currentFloor) {
           this.currentFloor = newFloor;
-          return this.currentPosition = null;
+          this.currentPosition = null;
+          return this.dispatch('change:floor', this.currentFloor);
         } else if (newFloor._runtime.uid !== this.currentFloor._runtime.uid) {
           if ((new Date()) - this.currentFloor._runtime.lastAppear > 5000) {
             this.currentFloor = newFloor;
-            return this.currentPosition = null;
+            this.currentPosition = null;
+            return this.dispatch('change:floor', this.currentFloor);
           }
         }
       }
@@ -400,7 +405,8 @@ Kanikama = (function() {
     }
     if (newPosition != null) {
       newPosition.accuracy = accuracy;
-      return this.currentPosition = newPosition;
+      this.currentPosition = newPosition;
+      return this.dispatch('change:position', this.currentPosition);
     }
   };
 
@@ -412,6 +418,26 @@ Kanikama = (function() {
       if (this.currentFloor !== null) {
         return this.updatePosition();
       }
+    }
+  };
+
+  Kanikama.prototype.on = function(type, listener) {
+    var base;
+    (base = this.callbacks)[type] || (base[type] = []);
+    this.callbacks[type].push(listener);
+    return this;
+  };
+
+  Kanikama.prototype.dispatch = function(type, data) {
+    var callback, chain, i, len, results;
+    chain = this.callbacks[type];
+    if (chain != null) {
+      results = [];
+      for (i = 0, len = chain.length; i < len; i++) {
+        callback = chain[i];
+        results.push(callback(data));
+      }
+      return results;
     }
   };
 

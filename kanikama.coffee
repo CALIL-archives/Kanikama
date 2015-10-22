@@ -79,6 +79,9 @@ class Kanikama
   # 計測データのバッファ
   buffer: null
 
+  # @nodoc コールバック用変数
+  callbacks: {}
+
   # 現在選択されている施設のビーコンがバッファにあるか調べる
   #
   # @private
@@ -126,6 +129,7 @@ class Kanikama
         @currentFacility = newFacility
         @currentFloor = null
         @currentPosition = null
+        @dispatch('change:facility', @currentFacility)
 
   # もっとも近いフロアを返す
   #
@@ -208,11 +212,13 @@ class Kanikama
         if not @currentFloor
           @currentFloor = newFloor
           @currentPosition = null
+          @dispatch('change:floor', @currentFloor)
         else if newFloor._runtime.uid != @currentFloor._runtime.uid
           # 現在のフロアを5秒間以上検出していない場合は切り替え
           if (new Date()) - @currentFloor._runtime.lastAppear > 5000
             @currentFloor = newFloor
             @currentPosition = null
+            @dispatch('change:floor', @currentFloor)
 
   # Nearest1アルゴリズムの実装
   #
@@ -362,6 +368,7 @@ class Kanikama
     if newPosition?
       newPosition.accuracy = accuracy
       @currentPosition = newPosition
+      @dispatch('change:position', @currentPosition)
 
   # 新しい計測データを追加して状態をアップデートする
   #
@@ -372,6 +379,21 @@ class Kanikama
       @updateFloor()
       if @currentFloor isnt null
         @updatePosition()
+
+  # イベントハンドラーを設定する
+  #
+  # @param event_name {String} イベント名
+  # @param callback {function} コールバック関数
+  # change:headingup (newvalue) - 追従モードの変更を通知する
+  on: (type, listener) ->
+    @callbacks[type] ||= []
+    @callbacks[type].push listener
+    @
+
+  # @nodoc イベントを通知する
+  dispatch: (type, data) ->
+    chain = @callbacks[type]
+    callback data for callback in chain if chain?
 
 if typeof exports isnt 'undefined'
   module.exports =
