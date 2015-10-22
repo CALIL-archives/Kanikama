@@ -41,6 +41,11 @@ class Buffer
   push: (beacons)->
     if @verify and !validate_(beacons)
       throw new Error('Invalid Beacons.')
+    # todo: write test
+    for b in beacons
+      b.major = Number(b.major)
+      b.minor = Number(b.minor)
+      b.uuid = b.uuid.toLowerCase()
     if @buffer.length >= @length
       @buffer.shift()
     return @buffer.push(beacons)
