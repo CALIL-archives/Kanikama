@@ -14,7 +14,7 @@ if (typeof require !== "undefined") {
 }
 
 equalBeacon = function(a, b) {
-  return a.uuid === b.uuid && a.major === b.major && a.minor === b.minor;
+  return a.uuid.toLowerCase() === b.uuid.toLowerCase() && a.major === b.major && a.minor === b.minor;
 };
 
 Buffer = (function() {
@@ -38,8 +38,14 @@ Buffer = (function() {
   }
 
   Buffer.prototype.push = function(beacons) {
+    var b, i, len;
     if (this.verify && !validate_(beacons)) {
       throw new Error('Invalid Beacons.');
+    }
+    for (i = 0, len = beacons.length; i < len; i++) {
+      b = beacons[i];
+      b.major = Number(b.major);
+      b.minor = Number(b.minor);
     }
     if (this.buffer.length >= this.length) {
       this.buffer.shift();

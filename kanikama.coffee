@@ -14,7 +14,7 @@ if typeof require isnt "undefined"
 # ビーコンオブジェクトが同じかどうか評価する
 #
 equalBeacon = (a, b)->
-  a.uuid is b.uuid and a.major is b.major and a.minor is b.minor
+  a.uuid.toLowerCase() is b.uuid.toLowerCase() and a.major is b.major and a.minor is b.minor
 
 # Some utility for beacons buffer
 #
@@ -45,7 +45,6 @@ class Buffer
     for b in beacons
       b.major = Number(b.major)
       b.minor = Number(b.minor)
-      b.uuid = b.uuid.toLowerCase()
     if @buffer.length >= @length
       @buffer.shift()
     return @buffer.push(beacons)
