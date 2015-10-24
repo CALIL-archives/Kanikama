@@ -4,8 +4,9 @@ machine:
       0.12.7
 dependencies:
   post:
-    - npm update
     - ./node_modules/.bin/gulp compile_test
 test:
   override:
-    - mkdir -p $CIRCLE_TEST_REPORTS/mocha && node ./node_modules/.bin/mocha -R xunit > $CIRCLE_TEST_REPORTS/mocha/testResults.xml
+    - npm test
+    - mkdir -p $CIRCLE_TEST_REPORTS/mocha
+    - cp test-results.xml $CIRCLE_TEST_REPORTS/mocha
