@@ -8,4 +8,4 @@ dependencies:
     - ./node_modules/.bin/gulp compile_test
 test:
   override:
-    - npm test
+    - mkdir -p $CIRCLE_TEST_REPORTS/mocha && node ./node_modules/.bin/mocha -R xunit > $CIRCLE_TEST_REPORTS/mocha/testResults.xml
