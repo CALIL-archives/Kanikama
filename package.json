@@ -23,7 +23,7 @@
     "should": "^7.1.0"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter mocha-circleci-reporter ",
+    "test": "./node_modules/.bin/mocha --reporter mocha-circleci-reporter test/*.js",
     "coverage": "mocha -R html-cov > coverage.html"
   },
   "repository": {
