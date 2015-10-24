@@ -35,6 +35,19 @@ describe 'Utilities', ->
       }
       equalBeacon(a,b).should.equal(false)
       done()
+    it 'should return true when same beacon(uuid case)', (done)->
+      a={
+        uuid:'a'
+        major:1
+        minor:1
+      }
+      b={
+        uuid:'A'
+        major:1
+        minor:1
+      }
+      equalBeacon(a,b).should.equal(true)
+      done()
 
 describe 'Buffer', ->
   describe 'Initialize', ->
@@ -413,4 +426,7 @@ describe 'Position', ->
     tmp = kanikama.currentPosition
     kanikama.push([])
     tmp.latitude.should.equal(kanikama.currentPosition.latitude)
+    done()
+  it 'Can detect string minor', (done)->
+    kanikama.push([SB('39', -20)])
     done()

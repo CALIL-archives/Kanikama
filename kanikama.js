@@ -39,13 +39,17 @@ Buffer = (function() {
 
   Buffer.prototype.push = function(beacons) {
     var b, i, len;
-    if (this.verify && !validate_(beacons)) {
-      throw new Error('Invalid Beacons.');
-    }
     for (i = 0, len = beacons.length; i < len; i++) {
       b = beacons[i];
-      b.major = Number(b.major);
-      b.minor = Number(b.minor);
+      if (typeof b.major === 'string') {
+        b.major = Number(b.major);
+      }
+      if (typeof b.minor === 'string') {
+        b.minor = Number(b.minor);
+      }
+    }
+    if (this.verify && !validate_(beacons)) {
+      throw new Error('Invalid Beacons.');
     }
     if (this.buffer.length >= this.length) {
       this.buffer.shift();

@@ -39,12 +39,13 @@ class Buffer
   # @return {Number} New buffer length
   #
   push: (beacons)->
+    for b in beacons
+      if typeof b.major is 'string'
+        b.major = Number(b.major)
+      if typeof b.minor is 'string'
+        b.minor = Number(b.minor)
     if @verify and !validate_(beacons)
       throw new Error('Invalid Beacons.')
-    # todo: write test
-    for b in beacons
-      b.major = Number(b.major)
-      b.minor = Number(b.minor)
     if @buffer.length >= @length
       @buffer.shift()
     return @buffer.push(beacons)
