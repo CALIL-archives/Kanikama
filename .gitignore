@@ -3,3 +3,4 @@
 /coverage.html
 /test/*.js
 .idea/
+/test-results.xml
