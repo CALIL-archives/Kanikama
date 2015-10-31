@@ -311,31 +311,27 @@ Kanikama = (function() {
     beacons.sort(function(_a, _b) {
       return _b.rssi - _a.rssi;
     });
-    if (filter_near > 0 && beacons.length > 1 && beacons[0].rssi - beacons[1].rssi < filter_near) {
+    if (filter_near > 0 && beacons.length > 1 && beacons[0].rssi - beacons[1].rssi <= filter_near) {
       return null;
     }
     ref = this.currentFloor.nearestD;
     for (i = 0, len = ref.length; i < len; i++) {
       p = ref[i];
       if (equalBeacon(p.beacon, beacons[0])) {
+        p.algorithm = 'nearestD';
+        p.rssi = beacons[0].rssi;
         start = p.direction - p.range / 2;
         end = p.direction + p.range / 2;
         if ((start <= (ref1 = this.heading) && ref1 <= end)) {
-          p.algorithm = 'nearestD';
-          p.rssi = beacons[0].rssi;
           return p;
         }
         if (start < 0) {
           if ((start + 360 <= (ref2 = this.heading) && ref2 <= 360)) {
-            p.algorithm = 'nearestD';
-            p.rssi = beacons[0].rssi;
             return p;
           }
         }
         if (end >= 360) {
           if ((0 <= (ref3 = this.heading) && ref3 <= end - 360)) {
-            p.algorithm = 'nearestD';
-            p.rssi = beacons[0].rssi;
             return p;
           }
         }

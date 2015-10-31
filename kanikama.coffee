@@ -285,21 +285,17 @@ class Kanikama
       return null
     for p in @currentFloor.nearestD
       if equalBeacon(p.beacon, beacons[0])
+        p.algorithm = 'nearestD'
+        p.rssi = beacons[0].rssi
         start = p.direction - p.range / 2
         end = p.direction + p.range / 2
         if start <= @heading <= end
-          p.algorithm = 'nearestD'
-          p.rssi = beacons[0].rssi
           return p
         if start < 0
           if start + 360 <= @heading <= 360
-            p.algorithm = 'nearestD'
-            p.rssi = beacons[0].rssi
             return p
         if end >= 360
           if 0 <= @heading <= end - 360
-            p.algorithm = 'nearestD'
-            p.rssi = beacons[0].rssi
             return p
     return null
 
