@@ -390,7 +390,7 @@ Kanikama = (function() {
   };
 
   Kanikama.prototype.updatePosition = function() {
-    var accuracy, d, diff, newPosition;
+    var a, accuracy, d, diff, newPosition;
     d = this.buffer.last(1)[0];
     accuracy = 0.1;
     newPosition = this.nearestD(d, 6);
@@ -412,13 +412,12 @@ Kanikama = (function() {
       }
     }
     if (newPosition !== null) {
+      newPosition.accuracy = accuracy;
       this.currentPosition = newPosition;
-      this.currentPosition.accuracy = accuracy;
-      if (this.currentPosition._runtime == null) {
-        this.currentPosition._runtime = {};
-      }
-      this.currentPosition._runtime.lastAppear = new Date();
-      this.currentPosition._runtime.accuracy = accuracy;
+      this.currentPosition._runtime = {
+        lastAppear: new Date(),
+        accuracy: accuracy
+      };
       return this.dispatch('change:position', this.currentPosition);
     } else if (this.currentPosition !== null) {
       diff = new Date() - this.currentPosition._runtime.lastAppear;
@@ -426,18 +425,18 @@ Kanikama = (function() {
         this.currentPosition = null;
         return this.dispatch('change:position', this.currentPosition);
       } else {
-        accuracy = this.currentPosition._runtime.accuracy;
+        a = this.currentPosition._runtime.accuracy;
         if (diff > 5000) {
-          accuracy *= 5;
+          a *= 5;
         }
         if (diff > 2000) {
-          accuracy *= 2;
+          a *= 2;
         }
-        if (accuracy >= 20) {
-          accuracy = 20;
+        if (a >= 20) {
+          a = 20;
         }
         if (accuracy !== this.currentPosition.accuracy) {
-          this.currentPosition.accuracy = accuracy;
+          this.currentPosition.accuracy = a;
           return this.dispatch('change:position', this.currentPosition);
         }
       }

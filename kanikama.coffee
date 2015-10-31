@@ -368,12 +368,12 @@ class Kanikama
               newPosition = @nearest1(d, 0)
               accuracy = 10
     if newPosition isnt null # 現在地が見つかった場合は移動
+      newPosition.accuracy = accuracy
       @currentPosition = newPosition
-      @currentPosition.accuracy = accuracy
-      if not @currentPosition._runtime?
-        @currentPosition._runtime = {}
-      @currentPosition._runtime.lastAppear = new Date()
-      @currentPosition._runtime.accuracy = accuracy
+      @currentPosition._runtime = {
+        lastAppear: new Date()
+        accuracy: accuracy
+      }
       @dispatch('change:position', @currentPosition)
     else if @currentPosition isnt null # 現在地が見つからない場合は、accuracyを下げる
       diff = new Date() - @currentPosition._runtime.lastAppear
@@ -381,15 +381,15 @@ class Kanikama
         @currentPosition = null
         @dispatch('change:position', @currentPosition)
       else
-        accuracy = @currentPosition._runtime.accuracy
+        a = @currentPosition._runtime.accuracy
         if diff > 5000
-          accuracy *= 5
+          a *= 5
         if diff > 2000
-          accuracy *= 2
-        if accuracy >= 20
-          accuracy = 20
+          a *= 2
+        if a >= 20
+          a = 20
         if accuracy isnt @currentPosition.accuracy
-          @currentPosition.accuracy = accuracy
+          @currentPosition.accuracy = a
           @dispatch('change:position', @currentPosition)
 
 
