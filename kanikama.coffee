@@ -360,14 +360,16 @@ class Kanikama
       newPosition = @nearest2(d, 3)
       if newPosition is null
         accuracy = 3
-        newPosition = @nearest1(d, 6)
+        newPosition = @nearestD(d, 4)
         if newPosition is null
-          accuracy = 6
-          newPosition = @nearest2(d, 1)
+          newPosition = @nearest1(d, 6)
           if newPosition is null
-            if @currentPosition is null or @currentPosition.accuracy >= 6
-              newPosition = @nearest1(d, 0)
-              accuracy = 10
+            accuracy = 6
+            newPosition = @nearest2(d, 1)
+            if newPosition is null
+              if @currentPosition is null or @currentPosition.accuracy >= 6
+                newPosition = @nearest1(d, 0)
+                accuracy = 10
     if newPosition isnt null # 現在地が見つかった場合は移動
       newPosition.accuracy = accuracy
       @currentPosition = newPosition
@@ -385,10 +387,10 @@ class Kanikama
         a = @currentPosition._runtime.accuracy
         if diff > 5000
           a *= 5
-        if diff > 2000
+        else if diff > 2000
           a *= 2
-        if a >= 20
-          a = 20
+        if a >= 25
+          a = 25
         if a isnt @currentPosition.accuracy
           @currentPosition.accuracy = a
           @dispatch('change:position', @currentPosition)
