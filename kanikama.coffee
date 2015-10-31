@@ -254,6 +254,7 @@ class Kanikama
         p.rssi = beacons[0].rssi
         p.algorithm = 'nearest1'
         return p
+    return null
 
   # NearestDアルゴリズムの実装
   #
@@ -388,7 +389,7 @@ class Kanikama
           a *= 2
         if a >= 20
           a = 20
-        if accuracy isnt @currentPosition.accuracy
+        if a isnt @currentPosition.accuracy
           @currentPosition.accuracy = a
           @dispatch('change:position', @currentPosition)
 

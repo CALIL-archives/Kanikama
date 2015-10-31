@@ -292,6 +292,7 @@ Kanikama = (function() {
         return p;
       }
     }
+    return null;
   };
 
   Kanikama.prototype.nearestD = function(beacons, filter_near) {
@@ -435,7 +436,7 @@ Kanikama = (function() {
         if (a >= 20) {
           a = 20;
         }
-        if (accuracy !== this.currentPosition.accuracy) {
+        if (a !== this.currentPosition.accuracy) {
           this.currentPosition.accuracy = a;
           return this.dispatch('change:position', this.currentPosition);
         }
