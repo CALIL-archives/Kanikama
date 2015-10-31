@@ -426,16 +426,18 @@ Kanikama = (function() {
         this.currentPosition = null;
         return this.dispatch('change:position', this.currentPosition);
       } else {
+        accuracy = this.currentPosition._runtime.accuracy;
         if (diff > 5000) {
-          accuracy = this.currentPosition._runtime.accuracy * 5;
+          accuracy *= 5;
         }
         if (diff > 2000) {
-          accuracy = this.currentPosition._runtime.accuracy * 2;
+          accuracy *= 2;
         }
         if (accuracy >= 20) {
           accuracy = 20;
         }
         if (accuracy !== this.currentPosition.accuracy) {
+          this.currentPosition.accuracy = accuracy;
           return this.dispatch('change:position', this.currentPosition);
         }
       }

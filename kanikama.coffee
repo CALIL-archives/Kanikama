@@ -381,13 +381,15 @@ class Kanikama
         @currentPosition = null
         @dispatch('change:position', @currentPosition)
       else
+        accuracy = @currentPosition._runtime.accuracy
         if diff > 5000
-          accuracy = @currentPosition._runtime.accuracy * 5
+          accuracy *= 5
         if diff > 2000
-          accuracy = @currentPosition._runtime.accuracy * 2
+          accuracy *= 2
         if accuracy >= 20
           accuracy = 20
         if accuracy isnt @currentPosition.accuracy
+          @currentPosition.accuracy = accuracy
           @dispatch('change:position', @currentPosition)
 
 
