@@ -427,6 +427,26 @@ describe 'Position', ->
     kanikama.push([])
     tmp.latitude.should.equal(kanikama.currentPosition.latitude)
     done()
+
   it 'Can detect string minor', (done)->
     kanikama.push([SB('39', -20)])
     done()
+
+  it 'increase accuracy if no detect.', (done)->
+    kanikama.push([SB(133, -20), SB(116, -20), SB(101, -30), SB(117, -30)])
+    t1 = 3
+    this.slow(25000)
+    this.timeout(30000)
+    setTimeout(->
+      kanikama.push []
+      kanikama.currentPosition.accuracy.should.equal(t1*2)
+      setTimeout(->
+        kanikama.push []
+        kanikama.currentPosition.accuracy.should.equal(t1*5)
+        setTimeout(->
+          kanikama.push []
+          should.not.exist(kanikama.currentPosition)
+          done()
+        , 5500);
+      , 3200);
+    , 2200);

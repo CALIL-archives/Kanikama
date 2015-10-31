@@ -385,6 +385,8 @@ class Kanikama
         @dispatch('change:position', @currentPosition)
       else
         a = @currentPosition._runtime.accuracy
+        if a < 3
+          a = 3
         if diff > 5000
           a *= 5
         else if diff > 2000
