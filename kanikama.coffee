@@ -367,10 +367,29 @@ class Kanikama
             if @currentPosition is null or @currentPosition.accuracy >= 6
               newPosition = @nearest1(d, 0)
               accuracy = 10
-    if newPosition?
-      newPosition.accuracy = accuracy
+    if newPosition isnt null # 現在地が見つかった場合は移動
       @currentPosition = newPosition
+      @currentPosition.accuracy = accuracy
+      if not @currentPosition._runtime?
+        @currentPosition._runtime = {}
+      @currentPosition._runtime.lastAppear = new Date()
+      @currentPosition._runtime.accuracy = accuracy
       @dispatch('change:position', @currentPosition)
+    else if @currentPosition isnt null # 現在地が見つからない場合は、accuracyを下げる
+      diff = new Date() - @currentPosition._runtime.lastAppear
+      if diff > 10000 # 10秒間現在地が見つからない場合は現在地は不明とする
+        @currentPosition = null
+        @dispatch('change:position', @currentPosition)
+      else
+        if diff > 5000
+          accuracy = @currentPosition._runtime.accuracy * 5
+        if diff > 2000
+          accuracy = @currentPosition._runtime.accuracy * 2
+        if accuracy >= 20
+          accuracy = 20
+        if accuracy isnt @currentPosition.accuracy
+          @dispatch('change:position', @currentPosition)
+
 
   # 新しい計測データを追加して状態をアップデートする
   #
