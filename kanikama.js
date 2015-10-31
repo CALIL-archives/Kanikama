@@ -407,8 +407,10 @@ Kanikama = (function() {
           accuracy = 6;
           newPosition = this.nearest2(d, 1);
           if (newPosition === null) {
-            newPosition = this.nearest1(d, 0);
-            accuracy = 10;
+            if (this.currentPosition === null || this.currentPosition.accuracy >= 6) {
+              newPosition = this.nearest1(d, 0);
+              accuracy = 10;
+            }
           }
         }
       }

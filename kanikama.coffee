@@ -281,7 +281,7 @@ class Kanikama
       return null
     beacons = beacons.filter((_b)-> _b.rssi isnt 0)
     beacons.sort((_a, _b)-> _b.rssi - _a.rssi)
-    if filter_near > 0 and beacons.length > 1 and beacons[0].rssi - beacons[1].rssi < filter_near
+    if filter_near > 0 and beacons.length > 1 and beacons[0].rssi - beacons[1].rssi <= filter_near
       return null
     for p in @currentFloor.nearestD
       if equalBeacon(p.beacon, beacons[0])
@@ -289,17 +289,17 @@ class Kanikama
         end = p.direction + p.range / 2
         if start <= @heading <= end
           p.algorithm = 'nearestD'
-          p.rssi=beacons[0].rssi
+          p.rssi = beacons[0].rssi
           return p
         if start < 0
           if start + 360 <= @heading <= 360
             p.algorithm = 'nearestD'
-            p.rssi=beacons[0].rssi
+            p.rssi = beacons[0].rssi
             return p
         if end >= 360
           if 0 <= @heading <= end - 360
             p.algorithm = 'nearestD'
-            p.rssi=beacons[0].rssi
+            p.rssi = beacons[0].rssi
             return p
     return null
 
@@ -368,8 +368,9 @@ class Kanikama
           accuracy = 6
           newPosition = @nearest2(d, 1)
           if newPosition is null
-            newPosition = @nearest1(d, 0)
-            accuracy = 10
+            if @currentPosition is null or @currentPosition.accuracy >= 6
+              newPosition = @nearest1(d, 0)
+              accuracy = 10
     if newPosition?
       newPosition.accuracy = accuracy
       @currentPosition = newPosition
@@ -380,7 +381,7 @@ class Kanikama
   push: (beacons)->
     @buffer.push(beacons)
     @updateFacility()
-    if @currentFacility isnt  null
+    if @currentFacility isnt null
       @updateFloor()
       if @currentFloor isnt null
         @updatePosition()
