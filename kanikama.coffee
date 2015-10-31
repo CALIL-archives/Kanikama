@@ -355,7 +355,7 @@ class Kanikama
   updatePosition: ->
     d = @buffer.last(1)[0]
     accuracy = 0.1
-    newPosition = @nearestD(d, 6)
+    newPosition = @nearestD(d, 5)
     if newPosition is null
       newPosition = @nearest2(d, 3)
       if newPosition is null

@@ -394,7 +394,7 @@ Kanikama = (function() {
     var a, accuracy, d, diff, newPosition;
     d = this.buffer.last(1)[0];
     accuracy = 0.1;
-    newPosition = this.nearestD(d, 6);
+    newPosition = this.nearestD(d, 5);
     if (newPosition === null) {
       newPosition = this.nearest2(d, 3);
       if (newPosition === null) {
