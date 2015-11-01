@@ -9,44 +9,44 @@ equalBeacon = require('../kanikama').equalBeacon
 describe 'Utilities', ->
   describe 'equalBeacon', ->
     it 'should return true when same beacon', (done)->
-      a={
-        uuid:'A'
-        major:1
-        minor:1
+      a = {
+        uuid: 'A'
+        major: 1
+        minor: 1
       }
-      b={
-        uuid:'A'
-        major:1
-        minor:1
+      b = {
+        uuid: 'A'
+        major: 1
+        minor: 1
       }
-      equalBeacon(a,b).should.equal(true)
+      equalBeacon(a, b).should.equal(true)
       done()
 
     it 'should return false when different beacon', (done)->
-      a={
-        uuid:'A'
-        major:1
-        minor:1
+      a = {
+        uuid: 'A'
+        major: 1
+        minor: 1
       }
-      b={
-        uuid:'A'
-        major:1
-        minor:2
+      b = {
+        uuid: 'A'
+        major: 1
+        minor: 2
       }
-      equalBeacon(a,b).should.equal(false)
+      equalBeacon(a, b).should.equal(false)
       done()
     it 'should return true when same beacon(uuid case)', (done)->
-      a={
-        uuid:'a'
-        major:1
-        minor:1
+      a = {
+        uuid: 'a'
+        major: 1
+        minor: 1
       }
-      b={
-        uuid:'A'
-        major:1
-        minor:1
+      b = {
+        uuid: 'A'
+        major: 1
+        minor: 1
       }
-      equalBeacon(a,b).should.equal(true)
+      equalBeacon(a, b).should.equal(true)
       done()
 
 describe 'Buffer', ->
@@ -377,7 +377,7 @@ describe 'Position', ->
     kanikama.push([SB(1, -20), SB(2, -10)])
     kanikama.currentPosition.latitude.should.equal(136.18641004628117)
     kanikama.currentPosition.algorithm.should.equal('nearest1')
-#    console.log kanikama.currentPosition
+    #    console.log kanikama.currentPosition
     done()
 
   it 'nearestD top (direction = 0, range = 90)', (done)->
@@ -392,7 +392,7 @@ describe 'Position', ->
       kanikama.push([SB(39, -20)])
       kanikama.currentPosition.latitude.should.equal(136.18627059384187)
       kanikama.currentPosition.algorithm.should.equal('nearestD')
-#    console.log kanikama.currentPosition.direction
+    #    console.log kanikama.currentPosition.direction
     done()
 
   it 'nearestD bottom (direction = 180, range = 90)', (done)->
@@ -402,7 +402,7 @@ describe 'Position', ->
       kanikama.push([SB(39, -20)])
       kanikama.currentPosition.latitude.should.equal(136.18626991863806)
       kanikama.currentPosition.algorithm.should.equal('nearestD')
-#    console.log kanikama.currentPosition.direction
+    #    console.log kanikama.currentPosition.direction
     done()
 
   it 'nearest2 x1', (done)->
@@ -410,7 +410,7 @@ describe 'Position', ->
     kanikama.push([SB(133, -20), SB(116, -20)])
     kanikama.currentPosition.latitude.should.equal(136.1863696569712)
     kanikama.currentPosition.algorithm.should.equal('nearest2')
-#    console.log kanikama.currentPosition
+    #    console.log kanikama.currentPosition
     done()
 
   it 'nearest2 x2', (done)->
@@ -447,10 +447,10 @@ describe 'Position', ->
     this.timeout(30000)
     setTimeout(->
       kanikama.push []
-      kanikama.currentPosition.accuracy.should.equal(t1*2)
+      kanikama.currentPosition.accuracy.should.equal(t1 * 2)
       setTimeout(->
         kanikama.push []
-        kanikama.currentPosition.accuracy.should.equal(t1*5)
+        kanikama.currentPosition.accuracy.should.equal(t1 * 5)
         setTimeout(->
           kanikama.push []
           should.not.exist(kanikama.currentPosition)
@@ -458,3 +458,119 @@ describe 'Position', ->
         , 5500);
       , 3200);
     , 2200);
+
+
+describe 'Position (with timeout)', ->
+  kanikama = new Kanikama()
+  kanikama.timeout = 5000
+  SB = (minor, rssi)->
+    uuid: '00000000-71C7-1001-B000-001C4D532518'
+    major: 105
+    minor: minor
+    rssi: rssi
+
+  it 'Initial value is null', (done)->
+    should.not.exist(kanikama.currentPosition)
+    done()
+
+  it 'Set facility table', (done)->
+    fs = require("fs")
+    kanikama.facilities_ = JSON.parse(fs.readFileSync("test/sabae.json", "utf8"))
+    done()
+
+  it 'No error with empty beacon data', (done)->
+    kanikama.push([])
+    done()
+
+  it 'nearest1 x1', (done)->
+    kanikama.push([SB(1, -10)])
+    kanikama.currentPosition.latitude.should.equal(136.18638732106814)
+    kanikama.currentPosition.algorithm.should.equal('nearest1')
+    #console.log kanikama.currentPosition
+    done()
+
+  it 'nearest1 x2', (done)->
+    kanikama.push([SB(1, -20), SB(2, -10)])
+    kanikama.currentPosition.latitude.should.equal(136.18641004628117)
+    kanikama.currentPosition.algorithm.should.equal('nearest1')
+    #    console.log kanikama.currentPosition
+    done()
+
+  it 'nearestD top (direction = 0, range = 90)', (done)->
+    kanikama.buffer.clear()
+    for heading in [315..359]
+      kanikama.heading = heading
+      kanikama.push([SB(39, -20)])
+      kanikama.currentPosition.latitude.should.equal(136.18627059384187)
+      kanikama.currentPosition.algorithm.should.equal('nearestD')
+    for heading in [0..45]
+      kanikama.heading = heading
+      kanikama.push([SB(39, -20)])
+      kanikama.currentPosition.latitude.should.equal(136.18627059384187)
+      kanikama.currentPosition.algorithm.should.equal('nearestD')
+    #    console.log kanikama.currentPosition.direction
+    done()
+
+  it 'nearestD bottom (direction = 180, range = 90)', (done)->
+    kanikama.buffer.clear()
+    for heading in [135..225]
+      kanikama.heading = heading
+      kanikama.push([SB(39, -20)])
+      kanikama.currentPosition.latitude.should.equal(136.18626991863806)
+      kanikama.currentPosition.algorithm.should.equal('nearestD')
+    #    console.log kanikama.currentPosition.direction
+    done()
+
+  it 'nearest2 x1', (done)->
+    kanikama.buffer.clear()
+    kanikama.push([SB(133, -20), SB(116, -20)])
+    kanikama.currentPosition.latitude.should.equal(136.1863696569712)
+    kanikama.currentPosition.algorithm.should.equal('nearest2')
+    #    console.log kanikama.currentPosition
+    done()
+
+  it 'nearest2 x2', (done)->
+    kanikama.buffer.clear()
+    kanikama.push([SB(133, -20), SB(116, -20), SB(101, -30), SB(117, -30)])
+    kanikama.currentPosition.latitude.should.equal(136.1863696569712)
+    kanikama.currentPosition.algorithm.should.equal('nearest2')
+    done()
+
+  it 'nearest2 x2 filter near', (done)->
+    kanikama.buffer.clear()
+    kanikama.push([SB(133, -20), SB(116, -20), SB(101, -22), SB(117, -22)])
+    kanikama.currentPosition.accuracy.should.equal(6)
+    done()
+
+  it 'if no beacon continue previous position', (done)->
+    kanikama.buffer.clear()
+    kanikama.push([SB(39, -20)])
+    tmp = kanikama.currentPosition
+    kanikama.push([])
+    tmp.latitude.should.equal(kanikama.currentPosition.latitude)
+    done()
+
+  it 'Can detect string minor', (done)->
+    kanikama.buffer.clear()
+    kanikama.push([SB('39', -20)])
+    done()
+
+  it 'increase accuracy if no detect.', (done)->
+    kanikama.buffer.clear()
+    kanikama.push([SB(133, -20), SB(116, -20), SB(101, -30), SB(117, -30)])
+    t1 = 3
+    this.slow(25000)
+    this.timeout(30000)
+    setTimeout(->
+      kanikama.push []
+      kanikama.currentPosition.accuracy.should.equal(t1 * 2)
+      setTimeout(->
+        kanikama.push []
+        kanikama.currentPosition.accuracy.should.equal(t1 * 5)
+        setTimeout(->
+          kanikama.push []
+          should.not.exist(kanikama.currentPosition)
+          done()
+        , 5500);
+      , 3200);
+    , 2200 + 5000);

@@ -29,10 +29,12 @@ class Buffer
 
   # @param length {Number} Length of buffer
   # @param verify {Boolean} Verify data at each push (default:false)
+  # @param timeout {Number} timeout of beacon(ms)
   #
   constructor: (@length, @verify = true)->
     @buffer = []
-    @ranged= []
+    @ranged = []
+    @timeout = 0
 
   # Push new beacons to buffer
   #
@@ -52,28 +54,28 @@ class Buffer
     @buffer.push(beacons)
 
     # 平均処理のための処理
-    now = new Date()
-    for a in beacons
-      found = false
-      for b in @ranged
-        if equalBeacon(a, b)
-          b.rssi = a.rssi
-          b.lastAppear = now
-          found = true
-      if not found
-        a.lastAppear = now
-        @ranged.push(a)
+    if @timeout > 0
+      now = new Date()
+      for a in beacons
+        found = false
+        for b in @ranged
+          if equalBeacon(a, b)
+            b.rssi = a.rssi
+            b.lastAppear = now
+            found = true
+        if not found
+          a.lastAppear = now
+          @ranged.push(a)
 
-    #@ranged = @ranged.filter (c) -> now - c.lastAppear < 5000
+      @ranged = @ranged.filter (c) -> now - c.lastAppear < @timeout
     return true
 
   # Return slice of buffer
   # size is should set over 0
   #
   last: (size)->
-    if size is 1
+    if size is 1 and @timeout > 0
       return [@ranged]
-
     else
       return @buffer.slice(-1 * size)
 
@@ -91,8 +93,8 @@ class Buffer
 
 
 class Kanikama
-  constructor: ->
-    @buffer = new Buffer(10)
+  constructor: (@timeout = 0)->
+    @buffer = new Buffer(10, @timeout)
     @uid = 1000000000
 
   facilities_: null
@@ -403,16 +405,16 @@ class Kanikama
       @dispatch('change:position', @currentPosition)
     else if @currentPosition isnt null # 現在地が見つからない場合は、accuracyを下げる
       diff = new Date() - @currentPosition._runtime.lastAppear
-      if diff > 10000 # 10秒間現在地が見つからない場合は現在地は不明とする
+      if diff > @timeout + 10000 # 10秒間現在地が見つからない場合は現在地は不明とする
         @currentPosition = null
         @dispatch('change:position', @currentPosition)
       else
         a = @currentPosition._runtime.accuracy
         if a < 3
           a = 3
-        if diff > 5000
+        if diff > @timeout + 5000
           a *= 5
-        else if diff > 2000
+        else if diff > @timeout + 2000
           a *= 2
         if a >= 25
           a = 25
