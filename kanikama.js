@@ -35,10 +35,11 @@ Buffer = (function() {
     this.length = length;
     this.verify = verify != null ? verify : true;
     this.buffer = [];
+    this.ranged = [];
   }
 
   Buffer.prototype.push = function(beacons) {
-    var b, i, len;
+    var a, b, found, i, j, k, len, len1, len2, now, ref;
     for (i = 0, len = beacons.length; i < len; i++) {
       b = beacons[i];
       if (typeof b.major === 'string') {
@@ -54,15 +55,39 @@ Buffer = (function() {
     if (this.buffer.length >= this.length) {
       this.buffer.shift();
     }
-    return this.buffer.push(beacons);
+    this.buffer.push(beacons);
+    now = new Date();
+    for (j = 0, len1 = beacons.length; j < len1; j++) {
+      a = beacons[j];
+      found = false;
+      ref = this.ranged;
+      for (k = 0, len2 = ref.length; k < len2; k++) {
+        b = ref[k];
+        if (equalBeacon(a, b)) {
+          b.rssi = a.rssi;
+          b.lastAppear = now;
+          found = true;
+        }
+      }
+      if (!found) {
+        a.lastAppear = now;
+        this.ranged.push(a);
+      }
+    }
+    return true;
   };
 
   Buffer.prototype.last = function(size) {
-    return this.buffer.slice(-1 * size);
+    if (size === 1) {
+      return [this.ranged];
+    } else {
+      return this.buffer.slice(-1 * size);
+    }
   };
 
   Buffer.prototype.clear = function() {
     this.buffer.length = 0;
+    this.ranged.length = 0;
     return 0;
   };
 

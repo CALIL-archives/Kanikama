@@ -381,6 +381,7 @@ describe 'Position', ->
     done()
 
   it 'nearestD top (direction = 0, range = 90)', (done)->
+    kanikama.buffer.clear()
     for heading in [315..359]
       kanikama.heading = heading
       kanikama.push([SB(39, -20)])
@@ -395,6 +396,7 @@ describe 'Position', ->
     done()
 
   it 'nearestD bottom (direction = 180, range = 90)', (done)->
+    kanikama.buffer.clear()
     for heading in [135..225]
       kanikama.heading = heading
       kanikama.push([SB(39, -20)])
@@ -404,6 +406,7 @@ describe 'Position', ->
     done()
 
   it 'nearest2 x1', (done)->
+    kanikama.buffer.clear()
     kanikama.push([SB(133, -20), SB(116, -20)])
     kanikama.currentPosition.latitude.should.equal(136.1863696569712)
     kanikama.currentPosition.algorithm.should.equal('nearest2')
@@ -411,17 +414,20 @@ describe 'Position', ->
     done()
 
   it 'nearest2 x2', (done)->
+    kanikama.buffer.clear()
     kanikama.push([SB(133, -20), SB(116, -20), SB(101, -30), SB(117, -30)])
     kanikama.currentPosition.latitude.should.equal(136.1863696569712)
     kanikama.currentPosition.algorithm.should.equal('nearest2')
     done()
 
   it 'nearest2 x2 filter near', (done)->
+    kanikama.buffer.clear()
     kanikama.push([SB(133, -20), SB(116, -20), SB(101, -22), SB(117, -22)])
     kanikama.currentPosition.accuracy.should.equal(6)
     done()
 
   it 'if no beacon continue previous position', (done)->
+    kanikama.buffer.clear()
     kanikama.push([SB(39, -20)])
     tmp = kanikama.currentPosition
     kanikama.push([])
@@ -429,10 +435,12 @@ describe 'Position', ->
     done()
 
   it 'Can detect string minor', (done)->
+    kanikama.buffer.clear()
     kanikama.push([SB('39', -20)])
     done()
 
   it 'increase accuracy if no detect.', (done)->
+    kanikama.buffer.clear()
     kanikama.push([SB(133, -20), SB(116, -20), SB(101, -30), SB(117, -30)])
     t1 = 3
     this.slow(25000)

@@ -32,6 +32,7 @@ class Buffer
   #
   constructor: (@length, @verify = true)->
     @buffer = []
+    @ranged= []
 
   # Push new beacons to buffer
   #
@@ -48,24 +49,46 @@ class Buffer
       throw new Error('Invalid Beacons.')
     if @buffer.length >= @length
       @buffer.shift()
-    return @buffer.push(beacons)
+    @buffer.push(beacons)
+
+    # 平均処理のための処理
+    now = new Date()
+    for a in beacons
+      found = false
+      for b in @ranged
+        if equalBeacon(a, b)
+          b.rssi = a.rssi
+          b.lastAppear = now
+          found = true
+      if not found
+        a.lastAppear = now
+        @ranged.push(a)
+
+    #@ranged = @ranged.filter (c) -> now - c.lastAppear < 5000
+    return true
 
   # Return slice of buffer
   # size is should set over 0
   #
   last: (size)->
-    return @buffer.slice(-1 * size)
+    if size is 1
+      return [@ranged]
+
+    else
+      return @buffer.slice(-1 * size)
 
   # Clear buffer
   #
   clear: ->
     @buffer.length = 0
+    @ranged.length = 0
     return 0
 
   # Return buffer length
   #
   size: ->
     @buffer.length
+
 
 class Kanikama
   constructor: ->
