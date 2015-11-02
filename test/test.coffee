@@ -462,7 +462,7 @@ describe 'Position', ->
 
 describe 'Position (with timeout)', ->
   kanikama = new Kanikama()
-  kanikama.timeout = 5000
+  kanikama.setTimeout(5000)
   SB = (minor, rssi)->
     uuid: '00000000-71C7-1001-B000-001C4D532518'
     major: 105
@@ -479,10 +479,12 @@ describe 'Position (with timeout)', ->
     done()
 
   it 'No error with empty beacon data', (done)->
+    kanikama.buffer.clear()
     kanikama.push([])
     done()
 
   it 'nearest1 x1', (done)->
+    kanikama.buffer.clear()
     kanikama.push([SB(1, -10)])
     kanikama.currentPosition.latitude.should.equal(136.18638732106814)
     kanikama.currentPosition.algorithm.should.equal('nearest1')
@@ -490,6 +492,7 @@ describe 'Position (with timeout)', ->
     done()
 
   it 'nearest1 x2', (done)->
+    kanikama.buffer.clear()
     kanikama.push([SB(1, -20), SB(2, -10)])
     kanikama.currentPosition.latitude.should.equal(136.18641004628117)
     kanikama.currentPosition.algorithm.should.equal('nearest1')
@@ -558,6 +561,7 @@ describe 'Position (with timeout)', ->
   it 'increase accuracy if no detect.', (done)->
     kanikama.buffer.clear()
     kanikama.push([SB(133, -20), SB(116, -20), SB(101, -30), SB(117, -30)])
+    console.log kanikama.buffer
     t1 = 3
     this.slow(25000)
     this.timeout(30000)
@@ -573,4 +577,4 @@ describe 'Position (with timeout)', ->
           done()
         , 5500);
       , 3200);
-    , 2200 + 5000);
+    , 2200 + 6000);

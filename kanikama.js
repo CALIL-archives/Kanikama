@@ -40,7 +40,7 @@ Buffer = (function() {
   }
 
   Buffer.prototype.push = function(beacons) {
-    var a, b, found, i, j, k, len, len1, len2, now, ref;
+    var a, b, found, i, j, k, len, len1, len2, ref, t;
     for (i = 0, len = beacons.length; i < len; i++) {
       b = beacons[i];
       if (typeof b.major === 'string') {
@@ -58,7 +58,6 @@ Buffer = (function() {
     }
     this.buffer.push(beacons);
     if (this.timeout > 0) {
-      now = new Date();
       for (j = 0, len1 = beacons.length; j < len1; j++) {
         a = beacons[j];
         found = false;
@@ -67,17 +66,18 @@ Buffer = (function() {
           b = ref[k];
           if (equalBeacon(a, b)) {
             b.rssi = a.rssi;
-            b.lastAppear = now;
+            b.lastAppear = new Date();
             found = true;
           }
         }
         if (!found) {
-          a.lastAppear = now;
+          a.lastAppear = new Date();
           this.ranged.push(a);
         }
       }
+      t = this.timeout;
       this.ranged = this.ranged.filter(function(c) {
-        return now - c.lastAppear < this.timeout;
+        return new Date() - c.lastAppear < t;
       });
     }
     return true;
@@ -106,9 +106,8 @@ Buffer = (function() {
 })();
 
 Kanikama = (function() {
-  function Kanikama(timeout) {
-    this.timeout = timeout != null ? timeout : 0;
-    this.buffer = new Buffer(10, this.timeout);
+  function Kanikama() {
+    this.buffer = new Buffer(10);
     this.uid = 1000000000;
   }
 
@@ -125,6 +124,10 @@ Kanikama = (function() {
   Kanikama.prototype.buffer = null;
 
   Kanikama.prototype.callbacks = {};
+
+  Kanikama.prototype.setTimeout = function(timeout) {
+    return this.buffer.timeout = timeout;
+  };
 
   Kanikama.prototype.existCurrentFacilityBeacon = function(windowSize) {
     var b, beacons, fb, i, j, k, len, len1, len2, ref, ref1;
@@ -457,7 +460,7 @@ Kanikama = (function() {
       return this.dispatch('change:position', this.currentPosition);
     } else if (this.currentPosition !== null) {
       diff = new Date() - this.currentPosition._runtime.lastAppear;
-      if (diff > this.timeout + 10000) {
+      if (diff > this.buffer.timeout + 10000) {
         this.currentPosition = null;
         return this.dispatch('change:position', this.currentPosition);
       } else {
@@ -465,9 +468,9 @@ Kanikama = (function() {
         if (a < 3) {
           a = 3;
         }
-        if (diff > this.timeout + 5000) {
+        if (diff > this.buffer.timeout + 5000) {
           a *= 5;
-        } else if (diff > this.timeout + 2000) {
+        } else if (diff > this.buffer.timeout + 2000) {
           a *= 2;
         }
         if (a >= 25) {

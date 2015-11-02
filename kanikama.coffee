@@ -55,19 +55,19 @@ class Buffer
 
     # 平均処理のための処理
     if @timeout > 0
-      now = new Date()
       for a in beacons
         found = false
         for b in @ranged
           if equalBeacon(a, b)
             b.rssi = a.rssi
-            b.lastAppear = now
+            b.lastAppear = new Date()
             found = true
         if not found
-          a.lastAppear = now
+          a.lastAppear = new Date()
           @ranged.push(a)
+      t = @timeout
+      @ranged = @ranged.filter (c) -> new Date() - c.lastAppear < t
 
-      @ranged = @ranged.filter (c) -> now - c.lastAppear < @timeout
     return true
 
   # Return slice of buffer
@@ -93,8 +93,8 @@ class Buffer
 
 
 class Kanikama
-  constructor: (@timeout = 0)->
-    @buffer = new Buffer(10, @timeout)
+  constructor: ()->
+    @buffer = new Buffer(10)
     @uid = 1000000000
 
   facilities_: null
@@ -111,6 +111,9 @@ class Kanikama
 
   # @nodoc コールバック用変数
   callbacks: {}
+
+  setTimeout: (timeout)->
+    @buffer.timeout = timeout
 
   # 現在選択されている施設のビーコンがバッファにあるか調べる
   #
@@ -405,16 +408,16 @@ class Kanikama
       @dispatch('change:position', @currentPosition)
     else if @currentPosition isnt null # 現在地が見つからない場合は、accuracyを下げる
       diff = new Date() - @currentPosition._runtime.lastAppear
-      if diff > @timeout + 10000 # 10秒間現在地が見つからない場合は現在地は不明とする
+      if diff > @buffer.timeout + 10000 # 10秒間現在地が見つからない場合は現在地は不明とする
         @currentPosition = null
         @dispatch('change:position', @currentPosition)
       else
         a = @currentPosition._runtime.accuracy
         if a < 3
           a = 3
-        if diff > @timeout + 5000
+        if diff > @buffer.timeout + 5000
           a *= 5
-        else if diff > @timeout + 2000
+        else if diff > @buffer.timeout+ 2000
           a *= 2
         if a >= 25
           a = 25
