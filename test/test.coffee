@@ -561,7 +561,6 @@ describe 'Position (with timeout)', ->
   it 'increase accuracy if no detect.', (done)->
     kanikama.buffer.clear()
     kanikama.push([SB(133, -20), SB(116, -20), SB(101, -30), SB(117, -30)])
-    console.log kanikama.buffer
     t1 = 3
     this.slow(25000)
     this.timeout(30000)
@@ -577,4 +576,4 @@ describe 'Position (with timeout)', ->
           done()
         , 5500);
       , 3200);
-    , 2200 + 6000);
+    , 2200 + 5000);

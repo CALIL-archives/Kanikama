@@ -417,7 +417,7 @@ class Kanikama
           a = 3
         if diff > @buffer.timeout + 5000
           a *= 5
-        else if diff > @buffer.timeout+ 2000
+        else if diff > @buffer.timeout + 2000
           a *= 2
         if a >= 25
           a = 25
