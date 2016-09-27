@@ -11,19 +11,12 @@ gulp.task('default', function () {
     );
 });
 
-gulp.task('compile_test', function () {
-    return gulp.src('test/test.coffee')
-        .pipe(coffee({bare: true}).on('error', gutil.log))
-        .pipe(gulp.dest('./test/')
-    );
-});
-
 gulp.task('test', ['coverage'],function () {
     return gulp.src('test/test.js', {read: false})
         .pipe(mocha());
 });
 
-gulp.task('coverage', ['compile_test','default'],function () {
+gulp.task('coverage', ['default'],function () {
     return exec('mocha -R html-cov > coverage.html', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);

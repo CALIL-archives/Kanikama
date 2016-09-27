@@ -1,6 +1,5 @@
 /node_modules
 /doc
 /coverage.html
-/test/*.js
 .idea/
 /test-results.xml
