@@ -25,6 +25,7 @@
     "gulp-exec": "^2.1.2",
     "gulp-mocha": "^3.0.1",
     "gulp-watch": "^4.3.5",
+    "mocha": "^3.1.0",
     "mocha-circleci-reporter": "0.0.2",
     "should": "^11.1.0",
     "vinyl-source-stream": "^1.1.0"
