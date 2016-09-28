@@ -342,18 +342,18 @@ class Kanikama {
         start = p.direction - p.range / 2;
         end = p.direction + p.range / 2;
 
-        if (start <= this.heading <= end) {
+        if (start <= this.heading && this.heading <= end) {
           return p;
         }
 
         if (start < 0) {
-          if (start + 360 <= this.heading <= 360) {
+          if (start + 360 <= this.heading && this.heading <= 360) {
             return p;
           }
         }
 
         if (end >= 360) {
-          if (0 <= this.heading <= end - 360) {
+          if (0 <= this.heading && this.heading <= end - 360) {
             return p;
           }
         }
