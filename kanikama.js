@@ -53,9 +53,7 @@ export class Buffer {
    * @return {Number} New buffer length
    */
   push(beacons) {
-    var t;
-
-    for (var b of beacons) {
+    for (let b of beacons) {
       if (typeof b.major === "string") {
         b.major = Number(b.major);
       }
@@ -75,11 +73,11 @@ export class Buffer {
 
     this.buffer.push(beacons);
 
+    // 平均処理のための処理
     if (this.timeout > 0) {
-      for (var a of beacons) {
+      for (let a of beacons) {
         var found = false;
-
-        for (var b of this.ranged) {
+        for (let b of this.ranged) {
           if (equalBeacon(a, b)) {
             b.rssi = a.rssi;
             b.lastAppear = new Date();
@@ -92,9 +90,7 @@ export class Buffer {
           this.ranged.push(a);
         }
       }
-
-      t = this.timeout;
-
+      const t = this.timeout;
       this.ranged = this.ranged.filter(function(c) {
         return new Date() - c.lastAppear < t;
       });
@@ -237,17 +233,15 @@ export class Kanikama {
    * @private
    */
   getNearestFloor(windowSize) {
-    var rssiSum;
-    var rssiCount;
-    var near;
-    var foundFloor = 0;
-
-    for (var floor of this.currentFacility.floors) {
+    // ビーコンをフロア毎に仕分ける
+    // RSSIが0のビーコンは無視する
+    let foundFloor = 0;
+    for (let floor of this.currentFacility.floors) {
       floor._runtime.beacons = [];
-
-      for (var beacons of this.buffer.last(windowSize)) {
-        for (var b of beacons) {
-          for (var fb of floor.beacons) {
+      const buffer = this.buffer.last(windowSize);
+      for (const beacons of buffer) {
+        for (const b of beacons) {
+          for (const fb of floor.beacons) {
             if (equalBeacon(fb, b) && b.rssi !== 0) {
               floor._runtime.beacons.push({
                 uuid: b.uuid,
@@ -269,18 +263,20 @@ export class Kanikama {
       }
     }
 
+    // 見つかったフロアがひとつの場合はフロアを確定
     if (foundFloor === 1) {
-      for (var floor of this.currentFacility.floors) {
+      for (let floor of this.currentFacility.floors) {
         if (floor._runtime.beacons.length > 0) {
           return floor;
         }
       }
     }
 
-    var nearestFloor = null;
-    var effectiveRange = 3;
-
-    for (var floor of this.currentFacility.floors) {
+    // 各フロアでRSSIが最も強いビーコンの周囲3mのビーコンの平均RSSIを計算
+    // 最も平均RSSIが高いフロアを返す
+    let nearestFloor = null;
+    const effectiveRange = 3;
+    for (let floor of this.currentFacility.floors) {
       if (floor._runtime.beacons.length > 0) {
         floor._runtime.beacons.sort(function(a, b) {
           return b.rssi - a.rssi;
@@ -289,11 +285,10 @@ export class Kanikama {
         if (floor._runtime.beacons.length === 1) {
           floor._runtime.averageRssi = floor._runtime.beacons[0].rssi;
         } else {
-          near = floor._runtime.beacons[0];
-          rssiCount = 1;
-          rssiSum = near.rssi;
-
-          for (var b of floor._runtime.beacons.slice(1)) {
+          const near = floor._runtime.beacons[0];
+          let rssiCount = 1;
+          let rssiSum = near.rssi;
+          for (const b of floor._runtime.beacons.slice(1)) {
             var distance = geolib.getDistance(near, b);
 
             if (distance <= effectiveRange) {
@@ -319,8 +314,8 @@ export class Kanikama {
    * @private
    */
   updateFloor() {
-    var newFloor;
-
+    // フロアのランタイム変数を初期化
+    // 識別のためのユニークなID(UID)を設定
     for (var floor of this.currentFacility.floors) {
       if (!(floor._runtime != null)) {
         floor._runtime = {
@@ -329,24 +324,25 @@ export class Kanikama {
       }
     }
 
-    if (!(this.currentFloor != null) && this.currentFacility.floors.length === 1) {
+    if (this.currentFloor == null && this.currentFacility.floors.length === 1) {
       this.currentFloor = this.currentFacility.floors[0];
-      return this.currentPosition = null;
+      this.currentPosition = null;
     } else {
-      newFloor = this.getNearestFloor(3);
-
+      let newFloor = this.getNearestFloor(3);
       if (newFloor != null) {
         newFloor._runtime.lastAppear = new Date();
 
+        // フロアが1つしかない場合は即時フロアを確定する
         if (!this.currentFloor) {
           this.currentFloor = newFloor;
           this.currentPosition = null;
-          return this.dispatch("change:floor", this.currentFloor);
+          this.dispatch("change:floor", this.currentFloor);
         } else if (newFloor._runtime.uid !== this.currentFloor._runtime.uid) {
+          // 現在のフロアを5秒間以上検出していない場合は切り替え
           if ((new Date()) - this.currentFloor._runtime.lastAppear > 5000) {
             this.currentFloor = newFloor;
             this.currentPosition = null;
-            return this.dispatch("change:floor", this.currentFloor);
+            this.dispatch("change:floor", this.currentFloor);
           }
         }
       }
@@ -508,20 +504,14 @@ export class Kanikama {
       return y.rssi - x.rssi;
     });
 
-    var af = function(_item) {
-      return equalBeacon(_item, p.beacons[0]);
-    };
-
-    var bf = function(_item) {
-      return equalBeacon(_item, p.beacons[1]);
-    };
-
-    var candidate = [];
-
-    for (var p of this.currentFloor.nearest2) {
-      var a = beacons.filter(af);
-      var b = beacons.filter(bf);
-
+    let candidate = [];
+    for (const p of this.currentFloor.nearest2) {
+      const a = beacons.filter(function (_item) {
+        return equalBeacon(_item, p.beacons[0]);
+      });
+      const b = beacons.filter(function (_item) {
+        return equalBeacon(_item, p.beacons[1]);
+      });
       if (a.length > 0 && b.length > 0) {
         p.rssi = (a[0].rssi + b[0].rssi) / 2;
         candidate.push(p);
@@ -542,6 +532,7 @@ export class Kanikama {
       }
     }
 
+    // どちらかがトップであれば返す
     if (equalBeacon(candidate[0].beacons[0], beacons[0]) || equalBeacon(candidate[0].beacons[1], beacons[0])) {
       candidate[0].algorithm = "nearest2";
       return candidate[0];
@@ -555,12 +546,9 @@ export class Kanikama {
    * @private
    */
   updatePosition() {
-    var a;
-    var diff;
-    var d = this.buffer.last(1)[0];
-    var accuracy = 0.1;
-    var newPosition = this.nearestD(d, 5);
-
+    const d = this.buffer.last(1)[0];
+    let accuracy = 0.1;
+    let newPosition = this.nearestD(d, 5);
     if (newPosition === null) {
       newPosition = this.nearest2(d, 3);
 
@@ -586,7 +574,7 @@ export class Kanikama {
       }
     }
 
-    if (newPosition !== null) {
+    if (newPosition !== null) {  // 現在地が見つかった場合は移動
       newPosition.accuracy = accuracy;
       this.currentPosition = newPosition;
 
@@ -594,17 +582,14 @@ export class Kanikama {
         lastAppear: new Date(),
         accuracy: accuracy
       };
-
-      return this.dispatch("change:position", this.currentPosition);
-    } else if (this.currentPosition !== null) {
-      diff = new Date() - this.currentPosition._runtime.lastAppear;
-
-      if (diff > this.buffer.timeout + 10000) {
+      this.dispatch("change:position", this.currentPosition);
+    } else if (this.currentPosition !== null) {  // 現在地が見つからない場合は、accuracyを下げる
+      const diff = new Date() - this.currentPosition._runtime.lastAppear;
+      if (diff > this.buffer.timeout + 10000) {  // 10秒間現在地が見つからない場合は現在地は不明とする
         this.currentPosition = null;
-        return this.dispatch("change:position", this.currentPosition);
+        this.dispatch("change:position", this.currentPosition);
       } else {
-        a = this.currentPosition._runtime.accuracy;
-
+        let a = this.currentPosition._runtime.accuracy;
         if (a < 3) {
           a = 3;
         }
@@ -621,7 +606,7 @@ export class Kanikama {
 
         if (a !== this.currentPosition.accuracy) {
           this.currentPosition.accuracy = a;
-          return this.dispatch("change:position", this.currentPosition);
+          this.dispatch("change:position", this.currentPosition);
         }
       }
     }
@@ -638,7 +623,7 @@ export class Kanikama {
       this.updateFloor();
 
       if (this.currentFloor !== null) {
-        return this.updatePosition();
+        this.updatePosition();
       }
     }
   }
@@ -664,14 +649,12 @@ export class Kanikama {
    * @private
    */
   dispatch(type, data) {
-    var chain = this.callbacks[type];
+    const chain = this.callbacks[type];
 
     if (chain != null) {
-      return (() => {
-        for (var callback of chain) {
-          callback(data);
-        }
-      })();
+      for (const callback of chain) {
+        callback(data);
+      }
     }
   }
 }
