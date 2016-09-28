@@ -1,13 +1,32 @@
+/*
+
+ Kanikama
+ Copyright (c) 2015 CALIL Inc.
+ This software is released under the MIT License.
+ http://opensource.org/licenses/mit-license.php
+
+ */
+
 var geolib;
 
 if (typeof require !== "undefined") {
   geolib = require("geolib");
 }
 
-var equalBeacon = function(a, b) {
+/**
+ * ビーコンオブジェクトが同じかどうか評価する
+ * @param a
+ * @param b
+ * @returns {boolean}
+ */
+function equalBeacon(a, b) {
   return a.uuid.toLowerCase() === b.uuid.toLowerCase() && a.major === b.major && a.minor === b.minor;
-};
+}
 
+/**
+ * Some utility for beacons buffer
+ * @private
+ */
 class Buffer {
   validate_(beacons) {
     for (var b of beacons) {
@@ -19,6 +38,10 @@ class Buffer {
     return true;
   }
 
+  /**
+   * @param length {Number} Length of buffer
+   * @param verify {Boolean} Verify data at each push (default:false)
+   */
   constructor(length, verify = true) {
     this.length = length;
     this.verify = verify;
@@ -27,6 +50,12 @@ class Buffer {
     this.timeout = 0;
   }
 
+  /**
+   * Push new beacons to buffer
+   *
+   * @param beacons {Object} List of beacons
+   * @return {Number} New buffer length
+   */
   push(beacons) {
     var t;
 
@@ -78,6 +107,11 @@ class Buffer {
     return true;
   }
 
+  /**
+   * Return slice of buffer
+   * @param size is should set over 0
+   * @returns {*}
+   */
   last(size) {
     if (size === 1 && this.timeout > 0) {
       return [this.ranged];
@@ -86,12 +120,18 @@ class Buffer {
     }
   }
 
+  /**
+   * Clear buffer
+   */
   clear() {
     this.buffer.length = 0;
     this.ranged.length = 0;
     return 0;
   }
 
+  /**
+   * Return buffer length
+   */
   size() {
     return this.buffer.length;
   }
@@ -107,6 +147,13 @@ class Kanikama {
     return this.buffer.timeout = timeout;
   }
 
+  /**
+   * 現在選択されている施設のビーコンがバッファにあるか調べる
+   *
+   * @param windowSize {Number} 調査するバッファの長さ
+   * @returns {Boolean} ビーコンの有無
+   * @private
+   */
   existCurrentFacilityBeacon(windowSize) {
     if (this.currentFacility != null) {
       const buffer = this.buffer.last(windowSize);
@@ -125,6 +172,13 @@ class Kanikama {
     return false;
   }
 
+  /**
+   * もっとも近い(RSSIが強い)ビーコンの施設を返す
+   *
+   * @param windowSize {Number} 調査するバッファの長さ
+   * @returns {Object} 施設
+   * @private
+   */
   getNearestFacility(windowSize) {
     let nearestBeacon = null;
     let tmp = this.buffer.last(windowSize);
@@ -149,6 +203,12 @@ class Kanikama {
     return null;
   }
 
+  /**
+   * バッファを処理して施設を選択す
+   *
+   * 現在選択されている施設のビーコンがバッファにない場合、新しい施設を選択する
+   * @private
+   */
   updateFacility() {
     var newFacility;
 
@@ -164,6 +224,16 @@ class Kanikama {
     }
   }
 
+  /**
+   * もっとも近いフロアを返す
+   *
+   * ・各フロアで一番RSSIが近いビーコンの周囲3メートルのRSSI平均を比較する
+   * ・施設が選択されていない状態で呼び出した場合はエラーとなる
+   * ・ビーコンに該当するフロアが1つのみの場合はそのフロアを返す
+   * @param windowSize {Number} 調査するバッファの長さ
+   * @returns {Object} フロア
+   * @private
+   */
   getNearestFloor(windowSize) {
     var rssiSum;
     var rssiCount;
@@ -242,6 +312,10 @@ class Kanikama {
     return nearestFloor;
   }
 
+  /**
+   * バッファを処理してフロアを選択する
+   * @private
+   */
   updateFloor() {
     var newFloor;
 
@@ -277,6 +351,22 @@ class Kanikama {
     }
   }
 
+  /**
+   * Nearest1アルゴリズムの実装
+   *
+   * RSSIが最も強いビーコンを現在地として推定する
+   * currentFloor.nearest1に条件リストがある場合に動く
+   * {
+   *   latitude: 緯度
+   *   longitude: 経度
+   *   beacon: ビーコン
+   * }
+   *
+   * @param beacons {Object} 計測データ
+   * @param filter_near {Number} 第2候補との差の閾値
+   * @returns {Object} フロア
+   * @private
+   */
   nearest1(beacons, filter_near) {
     if (beacons.length === 0) {
       return null;
@@ -309,6 +399,24 @@ class Kanikama {
     return null;
   }
 
+  /**
+   * NearestDアルゴリズムの実装
+   *
+   * RSSIが最も強いビーコンとデバイスの向きにより現在地を推定する
+   * currentFloor.nearestDに条件リストがある場合に動く
+   * {
+   *   latitude: 緯度
+   *   longitude: 経度
+   *   beacon: ビーコン
+   *   direction: デバイスの方向(度)
+   *   range: directionを中心とした適用範囲(度)
+   * }
+   *
+   * @param beacons {Object} 計測データ  * @param beacons
+   * @param filter_near {Number} 第2候補との差の閾値  * @param filter_near
+   * @returns {Object} フロア  * @returns {*}
+   * @private
+   */
   nearestD(beacons, filter_near) {
     var end;
     var start;
@@ -365,6 +473,22 @@ class Kanikama {
     return null;
   }
 
+  /**
+   * Nearest2アルゴリズムの実装
+   *
+   * 2点の平均RSSIの比較により現在地を推定する
+   * currentFloor.nearest2に条件リストがある場合に動く
+   * {
+   *   latitude: 緯度
+   *   longitude: 経度
+   *   beacons: [ビーコン1,ビーコン2]
+   * }
+   *
+   * @param beacons {Object} 計測データ
+   * @param filter_near {Number} 第2候補との差の閾値
+   * @returns {Object} フロア
+   * @private
+   */
   nearest2(beacons, filter_near) {
     if (beacons.length < 2) {
       return null;
@@ -424,6 +548,10 @@ class Kanikama {
     return null;
   }
 
+  /**
+   * バッファを処理して現在場所を推定する
+   * @private
+   */
   updatePosition() {
     var a;
     var diff;
@@ -497,6 +625,9 @@ class Kanikama {
     }
   }
 
+  /**
+   * 新しい計測データを追加して状態をアップデートする
+   */
   push(beacons) {
     this.buffer.push(beacons);
     this.updateFacility();
@@ -510,12 +641,26 @@ class Kanikama {
     }
   }
 
+  /**
+   * イベントハンドラーを設定する
+   *
+   * @param type {String} イベント名
+   * @param listener {function} コールバック関数
+   * change:headingup (newvalue) - 追従モードの変更を通知する
+   * @returns {Kanikama}
+   */
   on(type, listener) {
     this.callbacks[type] || (this.callbacks[type] = []);
     this.callbacks[type].push(listener);
     return this;
   }
 
+  /**
+   * @nodoc イベントを通知する
+   * @param type
+   * @param data
+   * @private
+   */
   dispatch(type, data) {
     var chain = this.callbacks[type];
 
