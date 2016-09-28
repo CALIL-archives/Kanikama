@@ -1,6 +1,7 @@
 import 'blanket'
+import {describe, it} from 'mocha'
 import should from 'should'
-import {Buffer, Kanikama, equalBeacon} from "../kanikama"
+import {Buffer, Kanikama, equalBeacon} from '../kanikama.js'
 
 describe("Utilities", function() {
   return describe("equalBeacon", function() {

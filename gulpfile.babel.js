@@ -16,7 +16,7 @@ gulp.task('test', ['coverage'],function () {
         .pipe(mocha());
 });
 
-gulp.task('coverage', ['default'],function () {
+gulp.task('coverage',function () {
     return exec('mocha -R html-cov > coverage.html', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);

@@ -1,1 +1,1 @@
---require blanket
+--require blanket --require babel-core/register
