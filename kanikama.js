@@ -142,7 +142,7 @@ export class Kanikama {
   }
 
   setTimeout(timeout) {
-    return this.buffer.timeout = timeout;
+    this.buffer.timeout = timeout;
   }
 
   /**
@@ -153,7 +153,7 @@ export class Kanikama {
    * @private
    */
   existCurrentFacilityBeacon(windowSize) {
-    if (this.currentFacility != null) {
+    if (this.currentFacility !== null) {
       const buffer = this.buffer.last(windowSize);
       for (let i = 0; i < buffer.length; i++) {
         for (let j = 0; j < buffer[i].length; j++) {
@@ -317,7 +317,7 @@ export class Kanikama {
     // フロアのランタイム変数を初期化
     // 識別のためのユニークなID(UID)を設定
     for (var floor of this.currentFacility.floors) {
-      if (!(floor._runtime != null)) {
+      if (floor._runtime == null) {
         floor._runtime = {
           uid: this.uid++
         };
@@ -329,7 +329,7 @@ export class Kanikama {
       this.currentPosition = null;
     } else {
       let newFloor = this.getNearestFloor(3);
-      if (newFloor != null) {
+      if (newFloor !== null) {
         newFloor._runtime.lastAppear = new Date();
 
         // フロアが1つしかない場合は即時フロアを確定する
@@ -419,7 +419,7 @@ export class Kanikama {
     var end;
     var start;
 
-    if (!(this.heading != null)) {
+    if (this.heading === null) {
       return null;
     }
 
@@ -506,12 +506,8 @@ export class Kanikama {
 
     let candidate = [];
     for (const p of this.currentFloor.nearest2) {
-      const a = beacons.filter(function (_item) {
-        return equalBeacon(_item, p.beacons[0]);
-      });
-      const b = beacons.filter(function (_item) {
-        return equalBeacon(_item, p.beacons[1]);
-      });
+      const a = beacons.filter((_item) => equalBeacon(_item, p.beacons[0]));
+      const b = beacons.filter((_item) => equalBeacon(_item, p.beacons[1]));
       if (a.length > 0 && b.length > 0) {
         p.rssi = (a[0].rssi + b[0].rssi) / 2;
         candidate.push(p);
@@ -637,7 +633,9 @@ export class Kanikama {
    * @returns {Kanikama}
    */
   on(type, listener) {
-    this.callbacks[type] || (this.callbacks[type] = []);
+    if (!this.callbacks[type]) {
+      this.callbacks[type] = []
+    }
     this.callbacks[type].push(listener);
     return this;
   }
