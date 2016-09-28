@@ -1,6 +1,4 @@
 engines:
-  coffeelint:
-    enabled: true
   eslint:
     enabled: true
   fixme:
@@ -8,11 +6,10 @@ engines:
 
 ratings:
   paths:
-  - "**.coffee"
   - "**.js"
 exclude_paths:
-- test/test.coffee
-- gulpfile.js
+- test/test.js
+- gulpfile.babel.js
 - README.md
 - circle.yml
 - package.json
