@@ -329,7 +329,6 @@ describe("Facility", function() {
 
     var num = 1000000;
     this.slow(0.001 * num);
-    this.timeout(10000);
 
     for (var i = 0; i <= num; i++) {
       kanikama.updateFacility();

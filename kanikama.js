@@ -109,9 +109,14 @@ class Kanikama {
 
   existCurrentFacilityBeacon(windowSize) {
     if (this.currentFacility != null) {
-      for (var beacons of this.buffer.last(windowSize)) {
-        for (var b of beacons) {
-          for (var fb of this.currentFacility.beacons) {
+      var tmp = this.buffer.last(windowSize);
+      for (var i = 0, len = tmp.length; i < len; i++) {
+        var beacons = tmp[i];
+        for (var j = 0, len1 = beacons.length; j < len1; j++) {
+          var b = beacons[j];
+          var _beacons = this.currentFacility.beacons;
+          for (var k = 0, len2 = _beacons.length; k < len2; k++) {
+            let fb = _beacons[k];
             if (equalBeacon(fb, b)) {
               return true;
             }
@@ -119,7 +124,6 @@ class Kanikama {
         }
       }
     }
-
     return false;
   }
 
