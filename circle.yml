@@ -2,9 +2,6 @@ machine:
   node:
     version:
       0.12.7
-dependencies:
-  post:
-    - ./node_modules/.bin/gulp compile_test
 test:
   override:
     - npm test
