@@ -109,15 +109,13 @@ class Kanikama {
 
   existCurrentFacilityBeacon(windowSize) {
     if (this.currentFacility != null) {
-      var tmp = this.buffer.last(windowSize);
-      for (var i = 0, len = tmp.length; i < len; i++) {
-        var beacons = tmp[i];
-        for (var j = 0, len1 = beacons.length; j < len1; j++) {
-          var b = beacons[j];
-          var _beacons = this.currentFacility.beacons;
-          for (var k = 0, len2 = _beacons.length; k < len2; k++) {
-            let fb = _beacons[k];
-            if (equalBeacon(fb, b)) {
+      const buffer = this.buffer.last(windowSize);
+      for (let i = 0; i < buffer.length; i++) {
+        for (let j = 0; j < buffer[i].length; j++) {
+          for (let k = 0; k < this.currentFacility.beacons.length; k++) {
+            const a = this.currentFacility.beacons[k];
+            const b = buffer[i][j];
+            if (equalBeacon(a, b)) {
               return true;
             }
           }
@@ -128,10 +126,10 @@ class Kanikama {
   }
 
   getNearestFacility(windowSize) {
-    var nearestBeacon = null;
-
-    for (var beacons of this.buffer.last(windowSize)) {
-      for (var b of beacons) {
+    let nearestBeacon = null;
+    let tmp = this.buffer.last(windowSize);
+    for (let beacons of tmp) {
+      for (let b of beacons) {
         if (nearestBeacon === null || nearestBeacon.rssi < b.rssi) {
           nearestBeacon = b;
         }
@@ -139,8 +137,8 @@ class Kanikama {
     }
 
     if (nearestBeacon) {
-      for (var facility of this.facilities_) {
-        for (var fb of facility.beacons) {
+      for (let facility of this.facilities_) {
+        for (let fb of facility.beacons) {
           if (equalBeacon(fb, nearestBeacon)) {
             return facility;
           }
