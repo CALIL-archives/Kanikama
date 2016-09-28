@@ -330,15 +330,7 @@ describe("Facility", function() {
     var num = 1000000;
     this.slow(0.001 * num);
 
-    for (var i of (function() {
-        var results = [];
-
-        for (var i = 0; (0 <= num ? i <= num : i >= num); (0 <= num ? i++ : i--)) {
-            results.push(i);
-        }
-
-        return results;
-    }).apply(this)) {
+    for (var i = 0; i <= num; i++) {
       kanikama.updateFacility();
     }
 
