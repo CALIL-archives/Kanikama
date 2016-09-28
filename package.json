@@ -33,7 +33,7 @@
     "should": "^7.1.0"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter mocha-circleci-reporter test/*.js",
+    "test": "./node_modules/.bin/mocha --compilers js:babel-register --reporter mocha-circleci-reporter test/*.js",
     "coverage": "mocha -R html-cov > coverage.html"
   },
   "repository": {
@@ -53,7 +53,6 @@
         "node_modules",
         "public"
       ],
-      "loader": "./node-loaders/coffee-script",
       "data-cover-reporter-options": {
         "shortnames": true
       }

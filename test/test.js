@@ -1,9 +1,6 @@
-require("blanket");
-var assert = require("assert");
-var should = require("should");
-var Buffer = require("../kanikama").Buffer;
-var Kanikama = require("../kanikama").Kanikama;
-var equalBeacon = require("../kanikama").equalBeacon;
+import 'blanket'
+import should from 'should'
+import {Buffer, Kanikama, equalBeacon} from "../kanikama"
 
 describe("Utilities", function() {
   return describe("equalBeacon", function() {
