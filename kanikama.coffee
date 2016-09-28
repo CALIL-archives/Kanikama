@@ -21,7 +21,7 @@ equalBeacon = (a, b)->
 # @private
 #
 class Buffer
-  validate_ = (beacons)->
+  validate_: (beacons)->
     for b in beacons
       if typeof b.major isnt 'number' or typeof b.minor isnt 'number' or typeof b.rssi isnt 'number' or typeof b.uuid isnt 'string'
         return false
@@ -47,7 +47,7 @@ class Buffer
         b.major = Number(b.major)
       if typeof b.minor is 'string'
         b.minor = Number(b.minor)
-    if @verify and !validate_(beacons)
+    if @verify and !@validate_(beacons)
       throw new Error('Invalid Beacons.')
     if @buffer.length >= @length
       @buffer.shift()
