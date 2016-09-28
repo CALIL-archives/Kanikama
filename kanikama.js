@@ -7,11 +7,7 @@
 
  */
 
-var geolib;
-
-if (typeof require !== "undefined") {
-  geolib = require("geolib");
-}
+import geolib from 'geolib'
 
 /**
  * ビーコンオブジェクトが同じかどうか評価する
@@ -19,7 +15,7 @@ if (typeof require !== "undefined") {
  * @param b
  * @returns {boolean}
  */
-function equalBeacon(a, b) {
+export function equalBeacon(a, b) {
   return a.uuid.toLowerCase() === b.uuid.toLowerCase() && a.major === b.major && a.minor === b.minor;
 }
 
@@ -27,7 +23,7 @@ function equalBeacon(a, b) {
  * Some utility for beacons buffer
  * @private
  */
-class Buffer {
+export class Buffer {
   validate_(beacons) {
     for (var b of beacons) {
       if (typeof b.major !== "number" || typeof b.minor !== "number" || typeof b.rssi !== "number" || typeof b.uuid !== "string") {
@@ -137,9 +133,15 @@ class Buffer {
   }
 }
 
-class Kanikama {
+export class Kanikama {
   constructor() {
-    this.buffer = new Buffer(10);
+    this.facilities_ = null;
+    this.currentFacility = null;  // 現在選択されている施設
+    this.currentFloor = null;  // 現在選択されているフロア
+    this.currentPosition = null;  // 現在地
+    this.heading = null;  // デバイスの向いている方向(度/null)
+    this.callbacks = {};  // コールバック用変数
+    this.buffer = new Buffer(10);  // 計測データのバッファ
     this.uid = 1000000000;
   }
 
@@ -672,20 +674,4 @@ class Kanikama {
       })();
     }
   }
-}
-
-Kanikama.prototype.facilities_ = null;
-Kanikama.prototype.currentFacility = null;
-Kanikama.prototype.currentFloor = null;
-Kanikama.prototype.currentPosition = null;
-Kanikama.prototype.heading = null;
-Kanikama.prototype.buffer = null;
-Kanikama.prototype.callbacks = {};
-
-if (typeof exports !== "undefined") {
-  module.exports = {
-    equalBeacon: equalBeacon,
-    Kanikama: Kanikama,
-    Buffer: Buffer
-  };
 }
