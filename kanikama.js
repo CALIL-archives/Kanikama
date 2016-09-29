@@ -324,7 +324,7 @@ export class Kanikama {
       }
     }
 
-    if (this.currentFloor == null && this.currentFacility.floors.length === 1) {
+    if (this.currentFloor === null && this.currentFacility.floors.length === 1) {
       this.currentFloor = this.currentFacility.floors[0];
       this.currentPosition = null;
     } else {
@@ -504,10 +504,13 @@ export class Kanikama {
       return y.rssi - x.rssi;
     });
 
+    const fa = (a) => (b) => equalBeacon(b, a);
+    const fb = (a) => (b) => equalBeacon(b, a);
+
     let candidate = [];
     for (const p of this.currentFloor.nearest2) {
-      const a = beacons.filter((_item) => equalBeacon(_item, p.beacons[0]));
-      const b = beacons.filter((_item) => equalBeacon(_item, p.beacons[1]));
+      const a = beacons.filter(fa(p.beacons[0]));
+      const b = beacons.filter(fb(p.beacons[1]));
       if (a.length > 0 && b.length > 0) {
         p.rssi = (a[0].rssi + b[0].rssi) / 2;
         candidate.push(p);
