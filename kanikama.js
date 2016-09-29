@@ -353,33 +353,23 @@ export class Kanikama {
     if (beacons.length === 0) {
       return null;
     }
-
     if (!this.currentFloor.nearest1) {
       return null;
     }
+    beacons = beacons.filter((b) => b.rssi !== 0);
+    beacons.sort((a, b) => b.rssi - a.rssi);
 
-    beacons = beacons.filter(function(_b) {
-      return _b.rssi !== 0;
-    });
-
-    beacons.sort(function(_a, _b) {
-      return _b.rssi - _a.rssi;
-    });
-
-    if (filter_near > 0 && beacons.length > 1) {
-      if (beacons[0].rssi - beacons[1].rssi <= filter_near) {
+    if (filter_near > 0 && beacons.length > 1 && beacons[0].rssi - beacons[1].rssi <= filter_near) {
         return null;
-      }
     }
 
-    for (var p of this.currentFloor.nearest1) {
+    for (let p of this.currentFloor.nearest1) {
       if (equalBeacon(p.beacon, beacons[0])) {
         p.rssi = beacons[0].rssi;
         p.algorithm = "nearest1";
         return p;
       }
     }
-
     return null;
   }
 
