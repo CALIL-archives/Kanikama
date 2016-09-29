@@ -238,8 +238,7 @@ export class Kanikama {
     let foundFloor = 0;
     for (let floor of this.currentFacility.floors) {
       floor._runtime.beacons = [];
-      const buffer = this.buffer.last(windowSize);
-      for (const beacons of buffer) {
+      for (const beacons of this.buffer.last(windowSize)) {
         for (const b of beacons) {
           for (const fb of floor.beacons) {
             if (equalBeacon(fb, b) && b.rssi !== 0) {
@@ -272,29 +271,26 @@ export class Kanikama {
 
     // 各フロアでRSSIが最も強いビーコンの周囲3mのビーコンの平均RSSIを計算
     // 最も平均RSSIが高いフロアを返す
-    let nearestFloor = null;
+    let result = null, rssiSum = 0, rssiCount = 0;
     const effectiveRange = 3;
     for (let floor of this.currentFacility.floors) {
       if (floor._runtime.beacons.length > 0) {
         floor._runtime.beacons.sort((a, b) => b.rssi - a.rssi);
-        const near = floor._runtime.beacons[0];
-        let rssiCount = 1;
-        let rssiSum = near.rssi;
-        for (const b of floor._runtime.beacons.slice(1)) {
-          var distance = geolib.getDistance(near, b);
+        for (const b of floor._runtime.beacons) {
+          const distance = geolib.getDistance(b, floor._runtime.beacons[0]);
           if (distance <= effectiveRange) {
             rssiSum += b.rssi;
             rssiCount++;
           }
         }
         floor._runtime.averageRssi = rssiSum / rssiCount;
-        if (nearestFloor === null || floor._runtime.averageRssi > nearestFloor._runtime.averageRssi) {
-          nearestFloor = floor;
+
+        if (result === null || floor._runtime.averageRssi > result._runtime.averageRssi) {
+          result = floor;
         }
       }
     }
-
-    return nearestFloor;
+    return result;
   }
 
   /**
@@ -370,8 +366,10 @@ export class Kanikama {
       return _b.rssi - _a.rssi;
     });
 
-    if (filter_near > 0 && beacons.length > 1 && beacons[0].rssi - beacons[1].rssi <= filter_near) {
-      return null;
+    if (filter_near > 0 && beacons.length > 1) {
+      if (beacons[0].rssi - beacons[1].rssi <= filter_near) {
+        return null;
+      }
     }
 
     for (var p of this.currentFloor.nearest1) {
@@ -427,8 +425,10 @@ export class Kanikama {
       return _b.rssi - _a.rssi;
     });
 
-    if (filter_near > 0 && beacons.length > 1 && beacons[0].rssi - beacons[1].rssi <= filter_near) {
-      return null;
+    if (filter_near > 0 && beacons.length > 1) {
+      if (beacons[0].rssi - beacons[1].rssi <= filter_near) {
+        return null;
+      }
     }
 
     for (var p of this.currentFloor.nearestD) {
