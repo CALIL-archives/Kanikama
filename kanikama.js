@@ -538,18 +538,14 @@ export class Kanikama {
     let newPosition = this.nearestD(d, 5);
     if (newPosition === null) {
       newPosition = this.nearest2(d, 3);
-
       if (newPosition === null) {
         accuracy = 3;
         newPosition = this.nearestD(d, 4);
-
         if (newPosition === null) {
           newPosition = this.nearest1(d, 6);
-
           if (newPosition === null) {
             accuracy = 6;
             newPosition = this.nearest2(d, 1);
-
             if (newPosition === null) {
               if (this.currentPosition === null || this.currentPosition.accuracy >= 6) {
                 newPosition = this.nearest1(d, 0);
@@ -564,7 +560,6 @@ export class Kanikama {
     if (newPosition !== null) {  // 現在地が見つかった場合は移動
       newPosition.accuracy = accuracy;
       this.currentPosition = newPosition;
-
       this.currentPosition._runtime = {
         lastAppear: new Date(),
         accuracy: accuracy
@@ -576,27 +571,35 @@ export class Kanikama {
         this.currentPosition = null;
         this.dispatch("change:position", this.currentPosition);
       } else {
-        let a = this.currentPosition._runtime.accuracy;
-        if (a < 3) {
-          a = 3;
-        }
-
-        if (diff > this.buffer.timeout + 5000) {
-          a *= 5;
-        } else if (diff > this.buffer.timeout + 2000) {
-          a *= 2;
-        }
-
-        if (a >= 25) {
-          a = 25;
-        }
-
+        const a = this.nowAccuracy_();
         if (a !== this.currentPosition.accuracy) {
           this.currentPosition.accuracy = a;
           this.dispatch("change:position", this.currentPosition);
         }
       }
     }
+  }
+
+  /**
+   * 現在の確度を取得する
+   * @returns {number} accuracy 現在の確度
+   * @private
+   */
+  nowAccuracy_() {
+    const diff = new Date() - this.currentPosition._runtime.lastAppear;
+    let a = this.currentPosition._runtime.accuracy;
+    if (a < 3) {
+      a = 3;
+    }
+    if (diff > this.buffer.timeout + 5000) {
+      a *= 5;
+    } else if (diff > this.buffer.timeout + 2000) {
+      a *= 2;
+    }
+    if (a >= 25) {
+      a = 25;
+    }
+    return a;
   }
 
   /**
