@@ -633,9 +633,7 @@ export class Kanikama {
    * @returns {Kanikama}
    */
   on(type, listener) {
-    if (!this.callbacks[type]) {
-      this.callbacks[type] = []
-    }
+    this.callbacks[type] = this.callbacks[type] || [];
     this.callbacks[type].push(listener);
     return this;
   }
@@ -651,7 +649,7 @@ export class Kanikama {
 
     if (chain != null) {
       for (const callback of chain) {
-        callback(data);
+        (() => callback(data)).bind(this);
       }
     }
   }
