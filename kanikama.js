@@ -317,7 +317,7 @@ export class Kanikama {
     // フロアのランタイム変数を初期化
     // 識別のためのユニークなID(UID)を設定
     for (var floor of this.currentFacility.floors) {
-      if (floor._runtime == null) {
+      if (!floor._runtime) {
         floor._runtime = {
           uid: this.uid++
         };
@@ -650,9 +650,10 @@ export class Kanikama {
   dispatch(type, data) {
     const chain = this.callbacks[type];
 
+
     if (Array.isArray(chain)) {
-      for (const callback of chain) {
-        callback(data);
+      for (const listener of chain) {
+        listener(data);
       }
     }
   }
