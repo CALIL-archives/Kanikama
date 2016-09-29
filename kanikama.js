@@ -251,13 +251,11 @@ export class Kanikama {
                 longitude: fb.longitude,
                 latitude: fb.latitude
               });
-
               break;
             }
           }
         }
       }
-
       if (floor._runtime.beacons.length > 0) {
         foundFloor++;
       }
@@ -278,28 +276,18 @@ export class Kanikama {
     const effectiveRange = 3;
     for (let floor of this.currentFacility.floors) {
       if (floor._runtime.beacons.length > 0) {
-        floor._runtime.beacons.sort(function(a, b) {
-          return b.rssi - a.rssi;
-        });
-
-        if (floor._runtime.beacons.length === 1) {
-          floor._runtime.averageRssi = floor._runtime.beacons[0].rssi;
-        } else {
-          const near = floor._runtime.beacons[0];
-          let rssiCount = 1;
-          let rssiSum = near.rssi;
-          for (const b of floor._runtime.beacons.slice(1)) {
-            var distance = geolib.getDistance(near, b);
-
-            if (distance <= effectiveRange) {
-              rssiSum += b.rssi;
-              rssiCount++;
-            }
+        floor._runtime.beacons.sort((a, b) => b.rssi - a.rssi);
+        const near = floor._runtime.beacons[0];
+        let rssiCount = 1;
+        let rssiSum = near.rssi;
+        for (const b of floor._runtime.beacons.slice(1)) {
+          var distance = geolib.getDistance(near, b);
+          if (distance <= effectiveRange) {
+            rssiSum += b.rssi;
+            rssiCount++;
           }
-
-          floor._runtime.averageRssi = rssiSum / rssiCount;
         }
-
+        floor._runtime.averageRssi = rssiSum / rssiCount;
         if (nearestFloor === null || floor._runtime.averageRssi > nearestFloor._runtime.averageRssi) {
           nearestFloor = floor;
         }
