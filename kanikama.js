@@ -647,9 +647,9 @@ export class Kanikama {
   dispatch(type, data) {
     const chain = this.callbacks[type];
 
-    if (chain != null) {
+    if (Array.isArray(chain)) {
       for (const callback of chain) {
-        (() => callback(data)).bind(this);
+        callback(data);
       }
     }
   }
