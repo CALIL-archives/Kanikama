@@ -639,3 +639,9 @@ export class Kanikama {
     }
   }
 }
+
+// Deprecated
+// ひとまずこれまで通りグローバルで使えるようにしておく
+if (window) {
+  window.Kanikama = Kanikama;
+}
